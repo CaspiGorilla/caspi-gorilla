@@ -84,7 +84,6 @@ async function analyzePhoto() {
     setStatus('Please take or upload a photo first.', '#e24b4a');
     return;
   }
-  const context = document.getElementById('photo-context').value.trim();
   const btn = document.querySelector('[onclick="analyzePhoto()"]');
   btn.textContent = 'Analyzing...';
   btn.disabled = true;
@@ -94,7 +93,7 @@ async function analyzePhoto() {
     const response = await fetch('/.netlify/functions/analyze-food', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ photo: currentPhotoBase64, mediaType: currentPhotoMediaType, context })
+      body: JSON.stringify({ photo: currentPhotoBase64, mediaType: currentPhotoMediaType })
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Function error');
@@ -104,7 +103,6 @@ async function analyzePhoto() {
     items.forEach(item => { foodLog.push({ id: Date.now() + Math.random(), ...item }); });
     renderLog();
     clearPhoto();
-    document.getElementById('photo-context').value = '';
     setStatus('✓ ' + items.length + ' item' + (items.length > 1 ? 's' : '') + ' identified and added to log.', 'var(--green)');
   } catch (e) {
     setStatus('✕ ' + (e.message || 'Something went wrong. Try again.'), '#e24b4a');
