@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caspi Gorilla</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦍</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="site-title">Caspi Gorilla</div>
+  <div class="site-subtitle">Wellness · Padel · Tennis · Recipes</div>
+</header>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('wellness',this)">Wellness</button>
+  <button class="tab-btn" onclick="switchTab('padel',this)">Padel</button>
+  <button class="tab-btn" onclick="switchTab('tennis',this)">Tennis</button>
+  <button class="tab-btn" onclick="switchTab('recipes',this)">Recipes</button>
+  <button class="tab-btn" onclick="switchTab('calculator',this)">Calculator</button>
+</div>
+
+<div class="content-area">
+
+  <!-- ══════════ WELLNESS ══════════ -->
+  <div class="tab-panel active" id="tab-wellness">
+
+    <div class="dietitian-note">
+      <div class="dn-icon">📋</div>
+      <div class="dn-text">
+        <strong>Dietitian Plan — Gal · March 2026</strong>
+        Personal meal plan based on your clinical dietitian's guidelines. Carb counting protocol active. Max 1 fat serving per meal. Aerobic exercise 2–3×/week recommended.
+      </div>
+    </div>
+
+    <div class="planner-legend">
+      <div class="legend-item"><div class="legend-dot ld-protein"></div>PROTEIN</div>
+      <div class="legend-item"><div class="legend-dot ld-carb"></div>CARBS</div>
+      <div class="legend-item"><div class="legend-dot ld-fat"></div>FAT</div>
+      <div class="legend-item"><div class="legend-dot ld-veg"></div>VEGETABLES</div>
+    </div>
+
+    <!-- DAY SELECTOR -->
+    <div class="planner-nav">
+      <button class="day-btn active" onclick="switchDay('sun',this)">Sun</button>
+      <button class="day-btn" onclick="switchDay('mon',this)">Mon</button>
+      <button class="day-btn" onclick="switchDay('tue',this)">Tue</button>
+      <button class="day-btn" onclick="switchDay('wed',this)">Wed</button>
+      <button class="day-btn" onclick="switchDay('thu',this)">Thu</button>
+      <button class="day-btn" onclick="switchDay('fri',this)">Fri</button>
+      <button class="day-btn" onclick="switchDay('sat',this)">Sat</button>
+    </div>
+
+    <!-- SUNDAY -->
+    <div class="day-panel active" id="day-sun">
+      <div class="day-totals">
+        <div class="dt-card dt-kcal"><div class="dt-label">Total Calories</div><div class="dt-value">1,480</div><div class="dt-unit">kcal / day</div></div>
+        <div class="dt-card dt-protein"><div class="dt-label">Protein</div><div class="dt-value">118g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-carbs"><div class="dt-label">Carbs</div><div class="dt-value">142g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-fat"><div class="dt-label">Fat</div><div class="dt-value">38g</div><div class="dt-unit">grams</div></div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Breakfast · 07:30</span>
+          <span class="meal-title">Greek Yogurt Bowl</span>
+          <span class="meal-kcal">~380 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Greek yogurt 3%</div><div class="mc-portion">1 cup (200ml)</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Oats + banana slices</div><div class="mc-portion">3 tbsp oats + ½ banana</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Cherry tomatoes</div><div class="mc-portion">Free amount</div></div>
+          <div class="meal-note">Add a drizzle of honey if desired. Keep fat to max 1 serving — skip butter/oil if having yogurt.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Lunch · 13:00</span>
+          <span class="meal-title">Grilled Chicken & Rice</span>
+          <span class="meal-kcal">~520 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Grilled chicken breast</div><div class="mc-portion">175g</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">White rice + green lentils mixed</div><div class="mc-portion">5 tbsp cooked</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Cucumber, tomato, parsley salad</div><div class="mc-portion">Unlimited</div></div>
+          <div class="meal-note">Mix lentils into the rice — great way to add plant protein and slow the carb release. Season with olive oil (1 tsp only).</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag snack">Snack · 16:30</span>
+          <span class="meal-title">Pre-Workout Fuel</span>
+          <span class="meal-kcal">~200 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">White yogurt</div><div class="mc-portion">1 cup</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Apple (medium)</div><div class="mc-portion">1 whole</div></div>
+          <div class="meal-component"><div class="mc-label">Timing</div><div class="mc-value">Eat 1.5h before workout</div><div class="mc-portion">—</div></div>
+          <div class="meal-note">If craving something sweet: keep the yogurt as your protein base, then add 4 squares of dark chocolate instead of the apple.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Dinner · 19:30</span>
+          <span class="meal-title">Egg & Tuna Plate</span>
+          <span class="meal-kcal">~380 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">2 eggs scrambled + ½ tin tuna in water</div><div class="mc-portion">2 eggs + 60g tuna</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Whole wheat pita</div><div class="mc-portion">1 small (½ pita)</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Sliced cucumbers, radish, green onion</div><div class="mc-portion">Free amount</div></div>
+          <div class="meal-note">Add ½ cup cottage 5% on the side if still hungry. Max 1 fat serving — use a little olive oil for eggs only.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONDAY -->
+    <div class="day-panel" id="day-mon">
+      <div class="day-totals">
+        <div class="dt-card dt-kcal"><div class="dt-label">Total Calories</div><div class="dt-value">1,390</div><div class="dt-unit">kcal / day</div></div>
+        <div class="dt-card dt-protein"><div class="dt-label">Protein</div><div class="dt-value">112g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-carbs"><div class="dt-label">Carbs</div><div class="dt-value">135g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-fat"><div class="dt-label">Fat</div><div class="dt-value">34g</div><div class="dt-unit">grams</div></div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Breakfast · 07:30</span>
+          <span class="meal-title">Omelette & Whole Bread</span>
+          <span class="meal-kcal">~360 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">2-egg omelette</div><div class="mc-portion">2 large eggs</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Whole wheat bread</div><div class="mc-portion">1 slice (30g)</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Tomato, cucumber, herbs</div><div class="mc-portion">Free amount</div></div>
+          <div class="meal-note">Cook the omelette with ½ tsp olive oil only. You can add a slice of white cheese inside the omelette for extra protein.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Lunch · 13:00</span>
+          <span class="meal-title">Turkey Patties & Bulgur</span>
+          <span class="meal-kcal">~510 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Turkey patties (homemade)</div><div class="mc-portion">175g</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Bulgur + chickpeas mixed</div><div class="mc-portion">5 tbsp cooked</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Roasted zucchini & eggplant</div><div class="mc-portion">Unlimited</div></div>
+          <div class="meal-note">Mixing chickpeas into bulgur adds fiber and protein. Season with cumin and lemon — no extra oil needed.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag snack">Snack · 16:30</span>
+          <span class="meal-title">Bread & Spread</span>
+          <span class="meal-kcal">~190 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Whole wheat bread</div><div class="mc-portion">1 slice</div></div>
+          <div class="meal-component"><div class="mc-label">Protein + Fat</div><div class="mc-value">Cottage 5% or peanut butter + honey</div><div class="mc-portion">2 tbsp cottage or 1 tsp PB</div></div>
+          <div class="meal-component"><div class="mc-label">Timing</div><div class="mc-value">1.5h before workout</div><div class="mc-portion">—</div></div>
+          <div class="meal-note">Peanut butter counts as your fat serving for this meal. Don't add extra fat elsewhere in this snack.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Dinner · 19:30</span>
+          <span class="meal-title">Cottage & Vegetable Plate</span>
+          <span class="meal-kcal">~350 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Cottage 5% + 1 egg soft boiled</div><div class="mc-portion">½ cup + 1 egg</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">2 whole grain crackers (large)</div><div class="mc-portion">2 crackers</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Large mixed salad</div><div class="mc-portion">Free amount</div></div>
+          <div class="meal-note">Light dinner. Add 5 natural walnuts as your fat serving if still hungry after the salad.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TUESDAY -->
+    <div class="day-panel" id="day-tue">
+      <div class="day-totals">
+        <div class="dt-card dt-kcal"><div class="dt-label">Total Calories</div><div class="dt-value">1,450</div><div class="dt-unit">kcal / day</div></div>
+        <div class="dt-card dt-protein"><div class="dt-label">Protein</div><div class="dt-value">124g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-carbs"><div class="dt-label">Carbs</div><div class="dt-value">130g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-fat"><div class="dt-label">Fat</div><div class="dt-value">42g</div><div class="dt-unit">grams</div></div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Breakfast · 07:30</span>
+          <span class="meal-title">Cottage Bowl with Granola</span>
+          <span class="meal-kcal">~370 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Cottage 5%</div><div class="mc-portion">½ cup (100g)</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Homemade granola</div><div class="mc-portion">3 tbsp</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables + Fruit</div><div class="mc-value">Cucumber + seasonal berries</div><div class="mc-portion">Free veg + ½ cup berries</div></div>
+          <div class="meal-note">Prefer homemade granola — store-bought often has hidden sugar and fat. Mix berries directly into cottage for a great texture.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Lunch · 13:00</span>
+          <span class="meal-title">Salmon & Quinoa</span>
+          <span class="meal-kcal">~540 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Baked salmon fillet</div><div class="mc-portion">175g</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Quinoa + edamame</div><div class="mc-portion">5 tbsp cooked quinoa</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Steamed broccoli & cherry tomatoes</div><div class="mc-portion">Unlimited</div></div>
+          <div class="meal-note">Salmon already has healthy fat — skip extra olive oil. Squeeze lemon over everything. Quinoa + edamame = complete protein profile.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag snack">Snack · 16:30</span>
+          <span class="meal-title">Fruit & Nuts</span>
+          <span class="meal-kcal">~180 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Carbs + Fiber</div><div class="mc-value">Pear or peach</div><div class="mc-portion">1 medium</div></div>
+          <div class="meal-component"><div class="mc-label">Fat</div><div class="mc-value">Natural almonds</div><div class="mc-portion">5 units</div></div>
+          <div class="meal-component"><div class="mc-label">Timing</div><div class="mc-value">1.5h before workout</div><div class="mc-portion">—</div></div>
+          <div class="meal-note">Simple and clean. The fruit gives fast carbs and the nuts slow down digestion slightly. Perfect pre-workout combo.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Dinner · 19:30</span>
+          <span class="meal-title">Shakshuka Light</span>
+          <span class="meal-kcal">~360 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">2 eggs in tomato sauce</div><div class="mc-portion">2 large eggs</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Whole wheat pita</div><div class="mc-portion">½ pita (small)</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Tomato base + peppers + spinach</div><div class="mc-portion">Unlimited in sauce</div></div>
+          <div class="meal-note">Make the sauce with minimal oil (½ tsp). Add ½ cup cottage on the side to boost protein for the evening.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEDNESDAY -->
+    <div class="day-panel" id="day-wed">
+      <div class="day-totals">
+        <div class="dt-card dt-kcal"><div class="dt-label">Total Calories</div><div class="dt-value">1,430</div><div class="dt-unit">kcal / day</div></div>
+        <div class="dt-card dt-protein"><div class="dt-label">Protein</div><div class="dt-value">116g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-carbs"><div class="dt-label">Carbs</div><div class="dt-value">138g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-fat"><div class="dt-label">Fat</div><div class="dt-value">36g</div><div class="dt-unit">grams</div></div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Breakfast · 07:30</span>
+          <span class="meal-title">Oats & White Cheese Bowl</span>
+          <span class="meal-kcal">~360 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">White cheese (labneh style)</div><div class="mc-portion">½ cup</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Rolled oats (cooked)</div><div class="mc-portion">3 tbsp dry = 6 tbsp cooked</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Radish, mint, cucumber</div><div class="mc-portion">Free amount</div></div>
+          <div class="meal-note">Savory oat bowl — add the white cheese on top with vegetables. Unusual but very satisfying. Add za'atar and olive oil (1 tsp).</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Lunch · 13:00</span>
+          <span class="meal-title">Beef Meatballs & Pasta</span>
+          <span class="meal-kcal">~530 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Lean beef meatballs (baked)</div><div class="mc-portion">175g</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Whole wheat pasta + red lentils</div><div class="mc-portion">5 tbsp cooked pasta</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Tomato sauce + green salad</div><div class="mc-portion">Unlimited</div></div>
+          <div class="meal-note">Bake meatballs — no frying. Mix a handful of cooked lentils into the pasta for extra fiber and protein.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag snack">Snack · 16:30</span>
+          <span class="meal-title">Yogurt + Fruit</span>
+          <span class="meal-kcal">~195 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">White yogurt (plain)</div><div class="mc-portion">1 cup</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Mango slices</div><div class="mc-portion">½ cup (100g)</div></div>
+          <div class="meal-component"><div class="mc-label">Timing</div><div class="mc-value">1.5h before workout</div><div class="mc-portion">—</div></div>
+          <div class="meal-note">Mango is slightly higher sugar — perfect for pre-workout energy. Avoid adding granola or honey here.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Dinner · 19:30</span>
+          <span class="meal-title">Tuna Stuffed Pita</span>
+          <span class="meal-kcal">~370 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Tuna in water + 1 egg hard boiled</div><div class="mc-portion">½ tin tuna + 1 egg</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Small whole wheat pita</div><div class="mc-portion">1 small pita</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Lettuce, tomato, cucumber, corn</div><div class="mc-portion">Free amount</div></div>
+          <div class="meal-note">Mix tuna with ¼ avocado as your fat serving (skip the oil). Season with lemon juice, salt, and black pepper.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THURSDAY -->
+    <div class="day-panel" id="day-thu">
+      <div class="day-totals">
+        <div class="dt-card dt-kcal"><div class="dt-label">Total Calories</div><div class="dt-value">1,470</div><div class="dt-unit">kcal / day</div></div>
+        <div class="dt-card dt-protein"><div class="dt-label">Protein</div><div class="dt-value">120g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-carbs"><div class="dt-label">Carbs</div><div class="dt-value">145g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-fat"><div class="dt-label">Fat</div><div class="dt-value">37g</div><div class="dt-unit">grams</div></div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Breakfast · 07:30</span>
+          <span class="meal-title">Yogurt Parfait</span>
+          <span class="meal-kcal">~375 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Yogurt 3% (plain)</div><div class="mc-portion">1 cup</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Granola (homemade preferred)</div><div class="mc-portion">3 tbsp</div></div>
+          <div class="meal-component"><div class="mc-label">Fruit + Veg</div><div class="mc-value">Strawberries + cucumber sticks</div><div class="mc-portion">½ cup berries + free veg</div></div>
+          <div class="meal-note">Layer yogurt → granola → berries for texture. The fiber from berries + oats keeps you full until lunch.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Lunch · 13:00</span>
+          <span class="meal-title">Chicken Schnitzel & Sweet Potato</span>
+          <span class="meal-kcal">~520 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Baked chicken schnitzel</div><div class="mc-portion">175g</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Baked sweet potato + peas</div><div class="mc-portion">1 medium potato</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Israeli salad (tomato, cucumber, parsley)</div><div class="mc-portion">Unlimited</div></div>
+          <div class="meal-note">Bake schnitzel — not fry. Coat in oat flour + spices. Mix peas into the sweet potato for extra legume fiber.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag snack">Snack · 16:30</span>
+          <span class="meal-title">Crackers & Spread</span>
+          <span class="meal-kcal">~185 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Whole grain rice cakes or crackers</div><div class="mc-portion">2 large crackers</div></div>
+          <div class="meal-component"><div class="mc-label">Protein + Fat</div><div class="mc-value">White cheese 5% + cucumber</div><div class="mc-portion">2 tbsp cheese</div></div>
+          <div class="meal-component"><div class="mc-label">Timing</div><div class="mc-value">1.5h before workout</div><div class="mc-portion">—</div></div>
+          <div class="meal-note">Simple and portable. Great to prep the night before. Keep it light — this is fuel, not a full meal.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Dinner · 19:30</span>
+          <span class="meal-title">Eggs & Legume Bowl</span>
+          <span class="meal-kcal">~390 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">2 eggs (any style) + ½ cup cottage</div><div class="mc-portion">2 eggs + 100g cottage</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Hummus (homemade or plain) + pita</div><div class="mc-portion">3 tbsp hummus + ½ pita</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Roasted peppers, onion, tomato</div><div class="mc-portion">Free amount</div></div>
+          <div class="meal-note">Hummus counts as your legume AND fat serving here. Don't add extra oil or tahini on top.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRIDAY -->
+    <div class="day-panel" id="day-fri">
+      <div class="day-totals">
+        <div class="dt-card dt-kcal"><div class="dt-label">Total Calories</div><div class="dt-value">1,490</div><div class="dt-unit">kcal / day</div></div>
+        <div class="dt-card dt-protein"><div class="dt-label">Protein</div><div class="dt-value">122g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-carbs"><div class="dt-label">Carbs</div><div class="dt-value">148g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-fat"><div class="dt-label">Fat</div><div class="dt-value">40g</div><div class="dt-unit">grams</div></div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Breakfast · 08:00</span>
+          <span class="meal-title">Shabbat Brunch Plate</span>
+          <span class="meal-kcal">~400 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">2 soft-boiled eggs + white cheese</div><div class="mc-portion">2 eggs + 2 tbsp cheese</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Whole wheat challah slice</div><div class="mc-portion">1 slice (30g)</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Full Israeli spread — tomato, cucumber, radish, onion</div><div class="mc-portion">Free amount</div></div>
+          <div class="meal-note">Friday morning — take time to enjoy. Max 1 fat: choose between ¼ avocado, 1 tsp olive oil, or 5 olives. Pick one only.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Lunch · 13:30</span>
+          <span class="meal-title">Fish Fillet & Couscous</span>
+          <span class="meal-kcal">~510 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Baked sea bass or sea bream</div><div class="mc-portion">175–200g</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Whole wheat couscous + chickpeas</div><div class="mc-portion">5 tbsp couscous</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Grilled vegetables (zucchini, peppers, onion)</div><div class="mc-portion">Unlimited</div></div>
+          <div class="meal-note">Lemon + herbs on the fish — no heavy sauce needed. Chickpeas in the couscous add protein and keep it filling through the afternoon.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag snack">Snack · 16:30</span>
+          <span class="meal-title">Light Fruit Snack</span>
+          <span class="meal-kcal">~140 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Watermelon / melon</div><div class="mc-portion">200g</div></div>
+          <div class="meal-component"><div class="mc-label">Optional Fat</div><div class="mc-value">5 almonds</div><div class="mc-portion">5 units</div></div>
+          <div class="meal-component"><div class="mc-label">Hydration</div><div class="mc-value">Water / sparkling water with mint</div><div class="mc-portion">2+ glasses</div></div>
+          <div class="meal-note">Light Friday afternoon snack. Rest day — no workout fuel needed. Focus on hydration.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Dinner · 20:00</span>
+          <span class="meal-title">Shabbat Dinner (Lighter Version)</span>
+          <span class="meal-kcal">~420 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Chicken breast / roast chicken (no skin)</div><div class="mc-portion">175g</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Rice or pita (1 carb serving)</div><div class="mc-portion">4 tbsp rice or ½ pita</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Roasted seasonal vegetables</div><div class="mc-portion">Unlimited</div></div>
+          <div class="meal-note">Enjoy Shabbat dinner — just be mindful of portions. Remove skin from chicken. Fill half the plate with vegetables before serving the rest.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SATURDAY -->
+    <div class="day-panel" id="day-sat">
+      <div class="day-totals">
+        <div class="dt-card dt-kcal"><div class="dt-label">Total Calories</div><div class="dt-value">1,420</div><div class="dt-unit">kcal / day</div></div>
+        <div class="dt-card dt-protein"><div class="dt-label">Protein</div><div class="dt-value">108g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-carbs"><div class="dt-label">Carbs</div><div class="dt-value">140g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-fat"><div class="dt-label">Fat</div><div class="dt-value">38g</div><div class="dt-unit">grams</div></div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Breakfast · 09:00</span>
+          <span class="meal-title">Lazy Shabbat Breakfast</span>
+          <span class="meal-kcal">~390 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Yogurt 3% + cottage 5%</div><div class="mc-portion">½ cup each</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Oats + seasonal fruit</div><div class="mc-portion">3 tbsp oats + 1 fruit</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Sliced veggies on the side</div><div class="mc-portion">Free amount</div></div>
+          <div class="meal-note">Saturday morning — slow and relaxed. No rush. Sit, eat mindfully, no screens at the table. Hydrate well before eating.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Lunch · 14:00</span>
+          <span class="meal-title">BBQ / Family Lunch</span>
+          <span class="meal-kcal">~530 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">Grilled meat / chicken skewers</div><div class="mc-portion">175g</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Pita or corn on the cob</div><div class="mc-portion">1 small pita or 1 ear corn</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Grilled / raw vegetables, salads</div><div class="mc-portion">Unlimited</div></div>
+          <div class="meal-note">Social eating day — enjoy it. Stick to the structure (protein + carb + veg) but don't stress. Fill up on salads first, then the rest.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag snack">Snack · 17:00</span>
+          <span class="meal-title">Fruit + Natural Nuts</span>
+          <span class="meal-kcal">~175 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">Nectarine or plum</div><div class="mc-portion">2–3 small fruits</div></div>
+          <div class="meal-component"><div class="mc-label">Fat</div><div class="mc-value">Natural walnuts or almonds</div><div class="mc-portion">5 units</div></div>
+          <div class="meal-component"><div class="mc-label">Hydration</div><div class="mc-value">Cold water / herbal tea</div><div class="mc-portion">2+ glasses</div></div>
+          <div class="meal-note">Keep it light on Saturday afternoon — the lunch was likely bigger. This is just a bridge to dinner.</div>
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header">
+          <span class="meal-time-tag">Dinner · 20:00</span>
+          <span class="meal-title">Light Egg Dinner</span>
+          <span class="meal-kcal">~340 kcal</span>
+        </div>
+        <div class="meal-body">
+          <div class="meal-component"><div class="mc-label">Protein</div><div class="mc-value">2 eggs + ½ cup cottage</div><div class="mc-portion">2 eggs + 100g</div></div>
+          <div class="meal-component"><div class="mc-label">Carbs</div><div class="mc-value">1–2 whole grain crackers</div><div class="mc-portion">2 crackers</div></div>
+          <div class="meal-component"><div class="mc-label">Vegetables</div><div class="mc-value">Whatever is in the fridge — cucumber, tomato, pepper</div><div class="mc-portion">Free amount</div></div>
+          <div class="meal-note">End of the week — keep dinner light and simple. Saturday dinner is an egg night. Hydrate well and get to bed early for the week ahead.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /wellness -->
+
+  <!-- ══════════ PADEL ══════════ -->
+  <div class="tab-panel" id="tab-padel">
+    <div class="pill-row">
+      <div class="pill hi">LEVEL // INTERMEDIATE</div>
+      <div class="pill">HAND // RIGHT</div>
+      <div class="pill">POSITION // LEFT</div>
+      <div class="pill">RACKET // BULLPADEL</div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Season Stats <span class="badge">2026</span></div>
+        <hr class="divider">
+        <div class="fields">
+          <div><div class="f-label">Matches</div><div class="f-val">24</div></div>
+          <div><div class="f-label">Win Rate</div><div class="f-val">62%</div></div>
+          <div><div class="f-label">Partner</div><div class="f-val">Rotating</div></div>
+          <div><div class="f-label">Sessions / wk</div><div class="f-val">2–3</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Training Focus</div>
+        <div class="tl">
+          <div class="tl-row"><div class="tl-aside"><div class="tl-dot on"></div><div class="tl-line-v"></div></div><div><div class="tl-lbl">Bandeja & Vibora</div><div class="tl-body-text">Working on overhead smash consistency from the back wall.</div></div></div>
+          <div class="tl-row"><div class="tl-aside"><div class="tl-dot on"></div><div class="tl-line-v"></div></div><div><div class="tl-lbl">Net Game</div><div class="tl-body-text">Volley reaction time and net positioning — coaching session every Friday.</div></div></div>
+          <div class="tl-row"><div class="tl-aside"><div class="tl-dot"></div><div class="tl-line-v"></div></div><div><div class="tl-lbl dim">Next Goal</div><div class="tl-body-text">Enter first local tournament by end of May 2026.</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-dark" style="margin-bottom:0;"><div class="card-title">Favorite Courts</div><div class="desc">[ Add your local padel clubs and courts here ]</div></div>
+  </div>
+
+  <!-- ══════════ TENNIS ══════════ -->
+  <div class="tab-panel" id="tab-tennis">
+    <div class="pill-row">
+      <div class="pill hi">LEVEL // 4.0 NTRP</div>
+      <div class="pill">STYLE // BASELINE</div>
+      <div class="pill">GRIP // SEMI-WESTERN</div>
+      <div class="pill">RACKET // WILSON BLADE</div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Season Stats <span class="badge">2026</span></div>
+        <hr class="divider">
+        <div class="fields">
+          <div><div class="f-label">Matches</div><div class="f-val">18</div></div>
+          <div><div class="f-label">Win Rate</div><div class="f-val">55%</div></div>
+          <div><div class="f-label">Surface</div><div class="f-val">Clay / Hard</div></div>
+          <div><div class="f-label">Sessions / wk</div><div class="f-val">2</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Training Focus</div>
+        <div class="tl">
+          <div class="tl-row"><div class="tl-aside"><div class="tl-dot on"></div><div class="tl-line-v"></div></div><div><div class="tl-lbl">Serve Consistency</div><div class="tl-body-text">First serve percentage target: 65%+. Toss placement and follow-through.</div></div></div>
+          <div class="tl-row"><div class="tl-aside"><div class="tl-dot on"></div><div class="tl-line-v"></div></div><div><div class="tl-lbl">Backhand Slice</div><div class="tl-body-text">Using the slice more tactically as an approach shot on clay.</div></div></div>
+          <div class="tl-row"><div class="tl-aside"><div class="tl-dot"></div><div class="tl-line-v"></div></div><div><div class="tl-lbl dim">Next Goal</div><div class="tl-body-text">Break into 4.5 NTRP by end of 2026 season.</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-dark" style="margin-bottom:0;"><div class="card-title">Match Log</div><div class="desc">[ Add recent match results and notes here ]</div></div>
+  </div>
+
+  <!-- ══════════ RECIPES ══════════ -->
+  <div class="tab-panel" id="tab-recipes">
+    <p class="recipe-section-label">Ninja Creami — Healthy Ice Cream</p>
+    <div class="three-col" style="margin-bottom:28px;">
+      <div class="recipe-card" onclick="openRecipe('creami1')"><div class="r-thumb rt-cream1">🫐</div><div class="r-body"><div class="r-cat">Ninja Creami</div><div class="r-name">Blueberry Protein Ice Cream</div><div class="r-meta"><span>5 min</span><span>High Protein</span><span>GF</span></div></div></div>
+      <div class="recipe-card" onclick="openRecipe('creami2')"><div class="r-thumb rt-cream2">🍫</div><div class="r-body"><div class="r-cat">Ninja Creami</div><div class="r-name">Dark Chocolate Peanut Butter Gelato</div><div class="r-meta"><span>5 min</span><span>High Protein</span><span>GF</span></div></div></div>
+      <div class="recipe-card" onclick="openRecipe('creami3')"><div class="r-thumb rt-cream3">🥭</div><div class="r-body"><div class="r-cat">Ninja Creami</div><div class="r-name">Mango Coconut Sorbet</div><div class="r-meta"><span>5 min</span><span>Vegan</span><span>GF</span></div></div></div>
+    </div>
+    <p class="recipe-section-label">Passover Recipes</p>
+    <div class="three-col">
+      <div class="recipe-card" onclick="openRecipe('passover1')"><div class="r-thumb rt-passover1">🥩</div><div class="r-body"><div class="r-cat">Passover · Main</div><div class="r-name">Slow-Braised Lamb Shoulder with Herbs</div><div class="r-meta"><span>4 hrs</span><span>GF</span><span>Pesach</span></div></div></div>
+      <div class="recipe-card" onclick="openRecipe('passover2')"><div class="r-thumb rt-passover2">🥕</div><div class="r-body"><div class="r-cat">Passover · Side</div><div class="r-name">Roasted Root Vegetables with Honey & Thyme</div><div class="r-meta"><span>45 min</span><span>Vegan</span><span>Pesach</span></div></div></div>
+      <div class="recipe-card" onclick="openRecipe('passover3')"><div class="r-thumb rt-passover3">🍋</div><div class="r-body"><div class="r-cat">Passover · Dessert</div><div class="r-name">Flourless Lemon Almond Cake</div><div class="r-meta"><span>50 min</span><span>GF</span><span>Pesach</span></div></div></div>
+    </div>
+  </div>
+
+  <!-- ══════════ CALCULATOR ══════════ -->
+  <div class="tab-panel" id="tab-calculator">
+
+    <!-- INPUT CARD -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">Nutrition Calculator <span class="badge">TDEE + MACROS</span></div>
+
+      <div style="margin-bottom:20px;">
+        <div class="calc-section-title" style="margin-bottom:10px;">Personal Info</div>
+        <div class="calc-grid">
+          <div class="calc-field">
+            <label class="calc-label">Age (years)</label>
+            <input class="calc-input" type="number" id="calc-age" placeholder="e.g. 30" min="10" max="100">
+          </div>
+          <div class="calc-field">
+            <label class="calc-label">Weight (kg)</label>
+            <input class="calc-input" type="number" id="calc-weight" placeholder="e.g. 80" min="30" max="300">
+          </div>
+          <div class="calc-field">
+            <label class="calc-label">Height (cm)</label>
+            <input class="calc-input" type="number" id="calc-height" placeholder="e.g. 178" min="100" max="250">
+          </div>
+          <div class="calc-field">
+            <label class="calc-label">Gender</label>
+            <select class="calc-select" id="calc-gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <div class="calc-section-title" style="margin-bottom:10px;">Activity Level</div>
+        <div class="calc-radio-group">
+          <input type="radio" name="activity" id="act-sed" class="calc-radio" value="1.2">
+          <label class="calc-radio-label" for="act-sed">Sedentary</label>
+          <input type="radio" name="activity" id="act-light" class="calc-radio" value="1.375" checked>
+          <label class="calc-radio-label" for="act-light">Light (1–2×/wk)</label>
+          <input type="radio" name="activity" id="act-mod" class="calc-radio" value="1.55">
+          <label class="calc-radio-label" for="act-mod">Moderate (3–5×/wk)</label>
+          <input type="radio" name="activity" id="act-active" class="calc-radio" value="1.725">
+          <label class="calc-radio-label" for="act-active">Active (6–7×/wk)</label>
+          <input type="radio" name="activity" id="act-very" class="calc-radio" value="1.9">
+          <label class="calc-radio-label" for="act-very">Very Active</label>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <div class="calc-section-title" style="margin-bottom:10px;">Goal</div>
+        <div class="calc-radio-group">
+          <input type="radio" name="goal" id="goal-lose" class="calc-radio" value="lose">
+          <label class="calc-radio-label" for="goal-lose">Lose Weight</label>
+          <input type="radio" name="goal" id="goal-maintain" class="calc-radio" value="maintain" checked>
+          <label class="calc-radio-label" for="goal-maintain">Maintain</label>
+          <input type="radio" name="goal" id="goal-gain" class="calc-radio" value="gain">
+          <label class="calc-radio-label" for="goal-gain">Gain Muscle</label>
+        </div>
+      </div>
+
+      <button class="calc-btn" onclick="calculate()">Calculate My Macros →</button>
+    </div>
+
+    <!-- RESULTS (hidden until calculated) -->
+    <div class="calc-results-section" id="calc-results">
+
+      <div class="bmr-note">
+        <div class="bmr-item">
+          <div class="bmr-lbl">BMR (Base)</div>
+          <div class="bmr-val" id="res-bmr">—</div>
+        </div>
+        <div class="bmr-item">
+          <div class="bmr-lbl">TDEE (Maintenance)</div>
+          <div class="bmr-val" id="res-tdee">—</div>
+        </div>
+        <div class="bmr-item">
+          <div class="bmr-lbl">Target Calories</div>
+          <div class="bmr-val" id="res-target">—</div>
+        </div>
+      </div>
+
+      <div class="results-grid">
+        <div class="result-card rc-kcal">
+          <div class="rc-label">Calories</div>
+          <div class="rc-value" id="res-kcal">—</div>
+          <div class="rc-unit">kcal / day</div>
+        </div>
+        <div class="result-card rc-protein">
+          <div class="rc-label">Protein</div>
+          <div class="rc-value" id="res-protein">—</div>
+          <div class="rc-unit">grams / day</div>
+        </div>
+        <div class="result-card rc-carbs">
+          <div class="rc-label">Carbs</div>
+          <div class="rc-value" id="res-carbs">—</div>
+          <div class="rc-unit">grams / day</div>
+        </div>
+        <div class="result-card rc-fat">
+          <div class="rc-label">Fat</div>
+          <div class="rc-value" id="res-fat">—</div>
+          <div class="rc-unit">grams / day</div>
+        </div>
+      </div>
+
+      <div class="card macro-bar-wrap" style="padding:20px 24px;">
+        <div class="card-title" style="margin-bottom:16px;">Macro Split</div>
+        <div class="macro-bar-row">
+          <span class="macro-bar-label">Protein</span>
+          <div class="macro-bar-track"><div class="macro-bar-fill bar-protein" id="bar-protein" style="width:0%"></div></div>
+          <span class="macro-bar-pct" id="pct-protein">—</span>
+        </div>
+        <div class="macro-bar-row">
+          <span class="macro-bar-label">Carbs</span>
+          <div class="macro-bar-track"><div class="macro-bar-fill bar-carbs" id="bar-carbs" style="width:0%"></div></div>
+          <span class="macro-bar-pct" id="pct-carbs">—</span>
+        </div>
+        <div class="macro-bar-row">
+          <span class="macro-bar-label">Fat</span>
+          <div class="macro-bar-track"><div class="macro-bar-fill bar-fat" id="bar-fat" style="width:0%"></div></div>
+          <span class="macro-bar-pct" id="pct-fat">—</span>
+        </div>
+      </div>
+
+      <div class="goal-tip" id="goal-tip-box">
+        <strong>Goal Tip</strong>
+        <span id="goal-tip-text"></span>
+      </div>
+
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title" style="margin-bottom:14px;">Per-Meal Breakdown <span class="badge">4 MEALS / DAY</span></div>
+        <div class="fields" id="per-meal-fields"></div>
+      </div>
+
+    </div>
+
+    <!-- ══ FOOD LOG CALCULATOR ══ -->
+    <div style="margin-top:32px; padding-top:28px; border-top:1px solid var(--card-border);">
+
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">Food Log <span class="badge">AI-POWERED</span></div>
+
+        <div class="calc-section-title" style="margin-bottom:6px;">Describe what you ate</div>
+        <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:12px; line-height:1.7;">Just write naturally — amounts, units, anything. The AI will parse it and estimate the macros.</p>
+
+        <textarea id="food-text-input"
+          style="width:100%; font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:var(--text); background:var(--page-bg); border:1px solid var(--card-border); border-radius:3px; padding:12px 14px; outline:none; resize:vertical; min-height:80px; line-height:1.6; transition:border-color 0.15s;"
+          placeholder="e.g. 1 hamburger, 200g fries and 1 coke zero 500ml"
+          onkeydown="if(event.key==='Enter' && (event.ctrlKey||event.metaKey)) analyzeFood()"
+          onfocus="this.style.borderColor='var(--green)'; this.style.background='#fff'"
+          onblur="this.style.borderColor='var(--card-border)'; this.style.background='var(--page-bg)'"></textarea>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:10px; gap:12px; flex-wrap:wrap;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-muted);">Ctrl+Enter to submit</span>
+          <button class="calc-btn" style="margin-top:0; width:auto; padding:11px 28px;" onclick="analyzeFood()">Analyze with AI →</button>
+        </div>
+
+        <div id="food-ai-status" style="font-family:'JetBrains Mono',monospace; font-size:11px; min-height:18px; margin-top:10px; display:flex; align-items:center; gap:8px;"></div>
+      </div>
+
+      <!-- LOG TABLE -->
+      <div id="food-log-section" style="display:none;">
+        <div class="card" style="margin-bottom:12px; padding:0; overflow:hidden;">
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead>
+              <tr style="background:#f8faf8; border-bottom:1px solid var(--card-border);">
+                <th style="text-align:left; padding:12px 20px; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-muted);">Food Item</th>
+                <th style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted);">Amount</th>
+                <th style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#6ecf9a;">Kcal</th>
+                <th style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#4caf7d;">Protein</th>
+                <th style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#378add;">Carbs</th>
+                <th style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#c89650;">Fat</th>
+                <th style="padding:12px 10px;"></th>
+              </tr>
+            </thead>
+            <tbody id="food-table-body"></tbody>
+            <tfoot>
+              <tr style="background:var(--navy); border-top:2px solid var(--green);">
+                <td style="padding:14px 20px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:rgba(255,255,255,0.35); letter-spacing:0.12em; text-transform:uppercase;">TOTAL</td>
+                <td style="padding:14px 14px;"></td>
+                <td style="text-align:right; padding:14px 14px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#6ecf9a;" id="total-kcal">—</td>
+                <td style="text-align:right; padding:14px 14px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#4caf7d;" id="total-protein">—</td>
+                <td style="text-align:right; padding:14px 14px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#378add;" id="total-carbs">—</td>
+                <td style="text-align:right; padding:14px 14px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#c89650;" id="total-fat">—</td>
+                <td style="padding:14px 10px;"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="calc-btn" style="width:auto; padding:10px 20px; background:transparent; color:var(--text-muted); border-color:var(--card-border);" onclick="clearLog()">Clear All</button>
+          <button class="calc-btn" style="width:auto; padding:10px 20px;" onclick="addMore()">+ Add More</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div><!-- /content-area -->
+
+<footer><span>CASPI GORILLA</span> — Wellness · Padel · Tennis · Recipes · © 2026</footer>
+
+<!-- RECIPE MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-cat" id="modal-cat"></div><div class="modal-title" id="modal-title"></div></div>
+      <button class="modal-close" onclick="closeRecipe()">✕</button>
+    </div>
+    <div class="modal-meta" id="modal-meta"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
