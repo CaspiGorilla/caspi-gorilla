@@ -19,6 +19,9 @@ function openRecipe(id) {
 function closeRecipe() { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
 function closeModalOnBg(e) { if(e.target===document.getElementById('modal-overlay')) closeRecipe(); }
 
+// ── FOOD LOG STATE ──
+let foodLog = [];
+
 // ── FOOD LOG MODE TOGGLE ──
 function setMode(mode) {
   const isPhoto = mode === 'photo';
@@ -151,7 +154,7 @@ async function analyzeFood() {
     setStatus('✓ ' + items.length + ' item' + (items.length > 1 ? 's' : '') + ' added to log.', 'var(--green)');
 
   } catch (e) {
-    setStatus('✕ Something went wrong. Try again.', '#e24b4a');
+    setStatus('✕ Error: ' + (e.message || 'Unknown error'), '#e24b4a');
     console.error(e);
   } finally {
     btn.textContent = 'Analyze with AI →';
