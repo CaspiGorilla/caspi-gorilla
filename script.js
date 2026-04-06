@@ -19,7 +19,100 @@ function openRecipe(id) {
 function closeRecipe() { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
 function closeModalOnBg(e) { if(e.target===document.getElementById('modal-overlay')) closeRecipe(); }
 
-let foodLog = [];
+// ── FOOD LOG MODE TOGGLE ──
+function setMode(mode) {
+  const isPhoto = mode === 'photo';
+  document.getElementById('mode-text').style.display = isPhoto ? 'none' : 'block';
+  document.getElementById('mode-photo').style.display = isPhoto ? 'block' : 'none';
+  document.getElementById('mode-text-btn').style.background = isPhoto ? 'none' : 'var(--navy)';
+  document.getElementById('mode-text-btn').style.color = isPhoto ? 'var(--text-muted)' : 'var(--green)';
+  document.getElementById('mode-photo-btn').style.background = isPhoto ? 'var(--navy)' : 'none';
+  document.getElementById('mode-photo-btn').style.color = isPhoto ? 'var(--green)' : 'var(--text-muted)';
+  setStatus('', '');
+}
+
+// ── PHOTO HANDLING ──
+let currentPhotoBase64 = null;
+let currentPhotoMediaType = 'image/jpeg';
+
+function onPhotoSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Detect media type
+  currentPhotoMediaType = file.type || 'image/jpeg';
+
+  // Compress image via canvas before sending (max 1000px wide, quality 0.75)
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX = 1000;
+      let w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const compressed = canvas.toDataURL('image/jpeg', 0.75);
+      currentPhotoBase64 = compressed.split(',')[1];
+      currentPhotoMediaType = 'image/jpeg'; // canvas always outputs JPEG
+      document.getElementById('photo-preview').src = compressed;
+      document.getElementById('photo-preview-wrap').style.display = 'block';
+      document.getElementById('photo-drop-area').style.display = 'none';
+      setStatus('✓ Photo ready — click Analyze to estimate nutrition.', 'var(--green)');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearPhoto() {
+  currentPhotoBase64 = null;
+  document.getElementById('photo-preview-wrap').style.display = 'none';
+  document.getElementById('photo-drop-area').style.display = 'block';
+  document.getElementById('photo-file-input').value = '';
+  document.getElementById('photo-camera-input').value = '';
+  setStatus('', '');
+}
+
+async function analyzePhoto() {
+  if (!currentPhotoBase64) {
+    setStatus('Please take or upload a photo first.', '#e24b4a');
+    return;
+  }
+  const context = document.getElementById('photo-context').value.trim();
+  const btn = document.querySelector('[onclick="analyzePhoto()"]');
+  btn.textContent = 'Analyzing...';
+  btn.disabled = true;
+  setStatus('<span style="opacity:0.6;">AI is identifying the food in your photo...</span>', 'var(--text-muted)');
+
+  try {
+    const response = await fetch('/.netlify/functions/analyze-food', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ photo: currentPhotoBase64, mediaType: currentPhotoMediaType, context })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Function error');
+    const items = data.items;
+    if (!Array.isArray(items) || items.length === 0) throw new Error('No food detected in image');
+
+    items.forEach(item => { foodLog.push({ id: Date.now() + Math.random(), ...item }); });
+    renderLog();
+    clearPhoto();
+    document.getElementById('photo-context').value = '';
+    setStatus('✓ ' + items.length + ' item' + (items.length > 1 ? 's' : '') + ' identified and added to log.', 'var(--green)');
+  } catch (e) {
+    setStatus('✕ ' + (e.message || 'Something went wrong. Try again.'), '#e24b4a');
+    console.error(e);
+  } finally {
+    btn.textContent = 'Analyze Photo with AI →';
+    btn.disabled = false;
+  }
+}
+
+
 
 function setStatus(msg, color) {
   const el = document.getElementById('food-ai-status');
@@ -81,13 +174,13 @@ function renderLog() {
   tbody.innerHTML = foodLog.map(item => `
     <tr style="border-bottom:1px solid var(--card-border);">
       <td style="padding:11px 20px; font-weight:500; color:var(--text);">${item.name}</td>
-      <td style="text-align:right; padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); white-space:nowrap;">${item.amount}</td>
+      <td class="food-col-amount" style="text-align:right; padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); white-space:nowrap;">${item.amount}</td>
       <td style="text-align:right; padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:500; color:var(--text);">${item.kcal}</td>
       <td style="text-align:right; padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text);">${item.protein}g</td>
-      <td style="text-align:right; padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text);">${item.carbs}g</td>
-      <td style="text-align:right; padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text);">${item.fat}g</td>
+      <td class="food-col-carbs" style="text-align:right; padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text);">${item.carbs}g</td>
+      <td class="food-col-fat" style="text-align:right; padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text);">${item.fat}g</td>
       <td style="padding:11px 10px; text-align:center;">
-        <button onclick="removeItem(${item.id})" style="font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text-muted); background:none; border:none; cursor:pointer; padding:2px 6px; border-radius:2px;" onmouseover="this.style.color='#e24b4a'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
+        <button onclick="removeItem(${item.id})" style="font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text-muted); background:none; border:none; cursor:pointer; padding:4px 8px; border-radius:2px; min-width:32px; min-height:32px;" onmouseover="this.style.color='#e24b4a'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
       </td>
     </tr>
   `).join('');

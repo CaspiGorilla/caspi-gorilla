@@ -3,20 +3,38 @@ exports.handler = async function (event) {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
-  let text;
-  try {
-    ({ text } = JSON.parse(event.body));
-  } catch {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid request body' }) };
-  }
-
-  if (!text || typeof text !== 'string') {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Missing text field' }) };
-  }
+  let body;
+  try { body = JSON.parse(event.body); }
+  catch { return { statusCode: 400, body: JSON.stringify({ error: 'Invalid request body' }) }; }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'API key not configured' }) };
+    return { statusCode: 500, body: JSON.stringify({ error: 'API key not configured on server' }) };
+  }
+
+  const isPhoto = !!body.photo;
+  const SYSTEM = `You are a nutrition expert. Analyze the food and return ONLY a valid JSON array with no markdown, no explanation.
+Format: [{"name":"Food name","amount":"portion description","kcal":000,"protein":00,"carbs":00,"fat":00}]
+Be realistic. Use standard serving sizes. Always return an array even for a single item.`;
+
+  let userContent;
+
+  if (isPhoto) {
+    const mediaType = body.mediaType || 'image/jpeg';
+    const contextNote = body.context ? ` Additional context: ${body.context}.` : '';
+    userContent = [
+      {
+        type: 'image',
+        source: { type: 'base64', media_type: mediaType, data: body.photo }
+      },
+      {
+        type: 'text',
+        text: `Identify all the food items visible in this image and estimate realistic nutrition values for each.${contextNote} Return ONLY the JSON array.`
+      }
+    ];
+  } else {
+    if (!body.text) return { statusCode: 400, body: JSON.stringify({ error: 'Missing text or photo' }) };
+    userContent = `The user ate: "${body.text}". Parse into individual items and estimate nutrition. Return ONLY the JSON array.`;
   }
 
   try {
@@ -30,24 +48,18 @@ exports.handler = async function (event) {
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: `You are a nutrition expert. The user ate: "${text}"
-
-Parse this into individual food items and estimate realistic nutrition values.
-Return ONLY a valid JSON array, no markdown, no explanation, nothing else.
-Format:
-[
-  { "name": "Hamburger", "amount": "1 burger (~200g)", "kcal": 540, "protein": 28, "carbs": 42, "fat": 26 },
-  { "name": "French Fries", "amount": "200g", "kcal": 510, "protein": 6, "carbs": 66, "fat": 24 },
-  { "name": "Coke Zero", "amount": "500ml", "kcal": 2, "protein": 0, "carbs": 0, "fat": 0 }
-]
-Be realistic with portion sizes. Use common restaurant/fast food values. Always return an array even for single items.`
-        }]
+        system: SYSTEM,
+        messages: [{ role: 'user', content: userContent }]
       }),
     });
 
     const data = await response.json();
+
+    if (!response.ok) {
+      const errMsg = data.error?.message || JSON.stringify(data);
+      return { statusCode: 502, body: JSON.stringify({ error: 'Anthropic API error: ' + errMsg }) };
+    }
+
     const raw = (data.content || []).map(b => b.text || '').join('');
     const clean = raw.replace(/```json|```/g, '').trim();
     const items = JSON.parse(clean);
@@ -60,7 +72,7 @@ Be realistic with portion sizes. Use common restaurant/fast food values. Always 
   } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to analyze food: ' + err.message }),
+      body: JSON.stringify({ error: 'Failed to analyze: ' + err.message }),
     };
   }
 };

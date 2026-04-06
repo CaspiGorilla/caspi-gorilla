@@ -706,22 +706,76 @@
       <div class="card" style="margin-bottom:16px;">
         <div class="card-title">Food Log <span class="badge">AI-POWERED</span></div>
 
-        <div class="calc-section-title" style="margin-bottom:6px;">Describe what you ate</div>
-        <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:12px; line-height:1.7;">Just write naturally — amounts, units, anything. The AI will parse it and estimate the macros.</p>
-
-        <textarea id="food-text-input"
-          style="width:100%; font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:var(--text); background:var(--page-bg); border:1px solid var(--card-border); border-radius:3px; padding:12px 14px; outline:none; resize:vertical; min-height:80px; line-height:1.6; transition:border-color 0.15s;"
-          placeholder="e.g. 1 hamburger, 200g fries and 1 coke zero 500ml"
-          onkeydown="if(event.key==='Enter' && (event.ctrlKey||event.metaKey)) analyzeFood()"
-          onfocus="this.style.borderColor='var(--green)'; this.style.background='#fff'"
-          onblur="this.style.borderColor='var(--card-border)'; this.style.background='var(--page-bg)'"></textarea>
-
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:10px; gap:12px; flex-wrap:wrap;">
-          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-muted);">Ctrl+Enter to submit</span>
-          <button class="calc-btn" style="margin-top:0; width:auto; padding:11px 28px;" onclick="analyzeFood()">Analyze with AI →</button>
+        <!-- INPUT MODE TOGGLE -->
+        <div style="display:flex; gap:0; margin-bottom:20px; background:var(--page-bg); border:1px solid var(--card-border); border-radius:3px; overflow:hidden;">
+          <button id="mode-text-btn" onclick="setMode('text')" style="flex:1; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:10px; border:none; cursor:pointer; transition:all 0.15s; background:var(--navy); color:var(--green); border-right:1px solid var(--card-border);">✏ Type</button>
+          <button id="mode-photo-btn" onclick="setMode('photo')" style="flex:1; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:10px; border:none; cursor:pointer; transition:all 0.15s; background:none; color:var(--text-muted);">📷 Photo</button>
         </div>
 
-        <div id="food-ai-status" style="font-family:'JetBrains Mono',monospace; font-size:11px; min-height:18px; margin-top:10px; display:flex; align-items:center; gap:8px;"></div>
+        <!-- TEXT MODE -->
+        <div id="mode-text">
+          <div class="calc-section-title" style="margin-bottom:6px;">Describe what you ate</div>
+          <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:12px; line-height:1.7;">Just write naturally — amounts, units, anything. The AI will parse it and estimate the macros.</p>
+          <textarea id="food-text-input"
+            style="width:100%; font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:var(--text); background:var(--page-bg); border:1px solid var(--card-border); border-radius:3px; padding:12px 14px; outline:none; resize:vertical; min-height:80px; line-height:1.6; transition:border-color 0.15s;"
+            placeholder="e.g. 1 hamburger, 200g fries and 1 coke zero 500ml"
+            onkeydown="if(event.key==='Enter' && (event.ctrlKey||event.metaKey)) analyzeFood()"
+            onfocus="this.style.borderColor='var(--green)'; this.style.background='#fff'"
+            onblur="this.style.borderColor='var(--card-border)'; this.style.background='var(--page-bg)'"></textarea>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:10px; gap:12px; flex-wrap:wrap;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-muted);">Ctrl+Enter to submit</span>
+            <button class="calc-btn" style="margin-top:0; width:auto; padding:11px 28px;" onclick="analyzeFood()">Analyze with AI →</button>
+          </div>
+        </div>
+
+        <!-- PHOTO MODE -->
+        <div id="mode-photo" style="display:none;">
+          <div class="calc-section-title" style="margin-bottom:6px;">Take or upload a photo</div>
+          <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:14px; line-height:1.7;">The AI will identify the food in the image and estimate the nutrition values automatically.</p>
+
+          <!-- Drop area -->
+          <div id="photo-drop-area" onclick="document.getElementById('photo-file-input').click()"
+            style="border:2px dashed var(--card-border); border-radius:4px; padding:28px 20px; text-align:center; cursor:pointer; transition:all 0.18s; background:var(--page-bg); margin-bottom:12px;"
+            onmouseover="this.style.borderColor='var(--green)'; this.style.background='var(--green-muted)'"
+            onmouseout="this.style.borderColor='var(--card-border)'; this.style.background='var(--page-bg)'">
+            <div style="font-size:32px; margin-bottom:8px;">📷</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px;">Tap to upload a photo</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-muted);">JPG, PNG, HEIC supported</div>
+          </div>
+
+          <!-- Mobile: Camera + Gallery split -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px;">
+            <button onclick="document.getElementById('photo-camera-input').click()"
+              style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; padding:11px; background:var(--navy); color:var(--green); border:1px solid var(--green-border); border-radius:3px; cursor:pointer;">
+              📸 Camera
+            </button>
+            <button onclick="document.getElementById('photo-file-input').click()"
+              style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; padding:11px; background:none; color:var(--text-muted); border:1px solid var(--card-border); border-radius:3px; cursor:pointer;">
+              🖼 Gallery
+            </button>
+          </div>
+
+          <!-- Gallery input (no capture) -->
+          <input type="file" id="photo-file-input" accept="image/*" style="display:none;" onchange="onPhotoSelected(event)">
+          <!-- Camera input (capture) -->
+          <input type="file" id="photo-camera-input" accept="image/*" capture="environment" style="display:none;" onchange="onPhotoSelected(event)">
+
+          <!-- Preview -->
+          <div id="photo-preview-wrap" style="display:none; margin-bottom:14px; position:relative;">
+            <img id="photo-preview" style="width:100%; max-height:260px; object-fit:cover; border-radius:4px; border:1px solid var(--card-border);">
+            <button onclick="clearPhoto()" style="position:absolute; top:8px; right:8px; font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--navy); color:white; border:none; border-radius:2px; padding:5px 12px; cursor:pointer;">✕ Clear</button>
+          </div>
+
+          <!-- Optional context -->
+          <div class="calc-field" style="margin-bottom:14px;">
+            <label class="calc-label">Add context (optional)</label>
+            <input class="calc-input" type="text" id="photo-context" placeholder="e.g. large portion, restaurant meal, homemade...">
+          </div>
+
+          <button class="calc-btn" style="margin-top:0;" onclick="analyzePhoto()">Analyze Photo with AI →</button>
+        </div>
+
+        <div id="food-ai-status" style="font-family:'JetBrains Mono',monospace; font-size:11px; min-height:18px; margin-top:12px; display:flex; align-items:center; gap:8px;"></div>
       </div>
 
       <!-- LOG TABLE -->
@@ -731,11 +785,11 @@
             <thead>
               <tr style="background:#f8faf8; border-bottom:1px solid var(--card-border);">
                 <th style="text-align:left; padding:12px 20px; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-muted);">Food Item</th>
-                <th style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted);">Amount</th>
+                <th class="food-col-amount" style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted);">Amount</th>
                 <th style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#6ecf9a;">Kcal</th>
                 <th style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#4caf7d;">Protein</th>
-                <th style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#378add;">Carbs</th>
-                <th style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#c89650;">Fat</th>
+                <th class="food-col-carbs" style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#378add;">Carbs</th>
+                <th class="food-col-fat" style="text-align:right; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#c89650;">Fat</th>
                 <th style="padding:12px 10px;"></th>
               </tr>
             </thead>
@@ -743,11 +797,11 @@
             <tfoot>
               <tr style="background:var(--navy); border-top:2px solid var(--green);">
                 <td style="padding:14px 20px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:rgba(255,255,255,0.35); letter-spacing:0.12em; text-transform:uppercase;">TOTAL</td>
-                <td style="padding:14px 14px;"></td>
+                <td class="food-col-amount" style="padding:14px 14px;"></td>
                 <td style="text-align:right; padding:14px 14px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#6ecf9a;" id="total-kcal">—</td>
                 <td style="text-align:right; padding:14px 14px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#4caf7d;" id="total-protein">—</td>
-                <td style="text-align:right; padding:14px 14px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#378add;" id="total-carbs">—</td>
-                <td style="text-align:right; padding:14px 14px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#c89650;" id="total-fat">—</td>
+                <td class="food-col-carbs" style="text-align:right; padding:14px 14px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#378add;" id="total-carbs">—</td>
+                <td class="food-col-fat" style="text-align:right; padding:14px 14px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#c89650;" id="total-fat">—</td>
                 <td style="padding:14px 10px;"></td>
               </tr>
             </tfoot>
