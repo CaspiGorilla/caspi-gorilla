@@ -1,4 +1,4 @@
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --navy: #0f1923; --navy-light: #1e2d3d;
     --green: #4caf7d; --green-muted: rgba(76,175,125,0.12); --green-border: rgba(76,175,125,0.3);
@@ -190,3 +190,111 @@
 
   footer { background:var(--navy); border-top:1px solid var(--green); padding:20px 24px; text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(255,255,255,0.25); letter-spacing:0.1em; }
   footer span { color:var(--green); }
+
+  /* ══════════════════════════════════════
+     MOBILE RESPONSIVE — max 768px
+  ══════════════════════════════════════ */
+  @media (max-width: 768px) {
+
+    /* Header */
+    header { padding:20px 16px 18px; }
+    .site-title { font-size:20px; }
+    .site-subtitle { font-size:10px; letter-spacing:0.14em; }
+
+    /* Tabs — scroll horizontally */
+    .tabs-bar { justify-content:flex-start; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .tabs-bar::-webkit-scrollbar { display:none; }
+    .tab-btn { padding:14px 20px; font-size:12px; white-space:nowrap; flex-shrink:0; }
+
+    /* Content */
+    .content-area { padding:16px 12px 60px; }
+
+    /* All grids → single column */
+    .two-col { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+
+    /* Cards */
+    .card { padding:18px 16px; }
+    .card-dark { padding:18px 16px; }
+    .card-title { font-size:13px; flex-wrap:wrap; gap:8px; }
+
+    /* Fields grid → single column on very small */
+    .fields { grid-template-columns:1fr 1fr; gap:10px 16px; }
+
+    /* Day selector — scroll horizontally */
+    .planner-nav { overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .planner-nav::-webkit-scrollbar { display:none; }
+    .day-btn { padding:10px 14px; font-size:10px; flex-shrink:0; min-width:44px; }
+
+    /* Meal blocks */
+    .meal-header { padding:10px 14px; gap:8px; flex-wrap:wrap; }
+    .meal-time-tag { font-size:9px; }
+    .meal-title { font-size:12px; }
+    .meal-kcal { font-size:10px; margin-left:auto; }
+    .meal-body { grid-template-columns:1fr 1fr; padding:12px 14px; gap:10px; }
+    .meal-note { grid-column:1/-1; font-size:11px; }
+
+    /* Day totals — 2x2 grid on mobile */
+    .day-totals { grid-template-columns:1fr 1fr; gap:8px; }
+    .dt-value { font-size:18px; }
+
+    /* Recipe cards */
+    .r-thumb { height:90px; font-size:36px; }
+
+    /* Recipe modal */
+    .modal-overlay { padding:16px 12px; }
+    .modal-header { padding:16px 18px; }
+    .modal-title { font-size:14px; }
+    .modal-meta { padding:12px 18px; gap:14px; }
+    .modal-body { padding:16px 18px 24px; }
+
+    /* Calculator */
+    .calc-grid { grid-template-columns:1fr 1fr; gap:10px; }
+    .calc-radio-label { font-size:10px; padding:7px 12px; }
+    .results-grid { grid-template-columns:1fr 1fr; gap:8px; }
+    .rc-value { font-size:20px; }
+    .bmr-note { grid-template-columns:1fr; gap:0; }
+    .bmr-item { padding:10px 0; border-right:none; border-bottom:1px solid var(--card-border); }
+    .bmr-item:last-child { border-bottom:none; }
+
+    /* Food log table — hide less important cols */
+    #food-table th:nth-child(4),
+    #food-table td:nth-child(4),
+    #food-table th:nth-child(5),
+    #food-table td:nth-child(5) { display:none; }
+    #food-table td, #food-table th { padding:10px 8px; font-size:11px; }
+    #food-table td:first-child, #food-table th:first-child { padding-left:14px; }
+
+    /* Dietitian note */
+    .dietitian-note { padding:14px 16px; gap:10px; }
+    .dn-text { font-size:12px; }
+
+    /* Legend */
+    .planner-legend { gap:10px; padding:10px 12px; }
+    .legend-item { font-size:9px; }
+  }
+
+  /* ══════════════════════════════════════
+     SMALL MOBILE — max 480px
+  ══════════════════════════════════════ */
+  @media (max-width: 480px) {
+
+    .site-title { font-size:18px; }
+    .content-area { padding:12px 10px 60px; }
+
+    /* Single column everything */
+    .calc-grid { grid-template-columns:1fr; }
+    .fields { grid-template-columns:1fr 1fr; }
+    .results-grid { grid-template-columns:1fr 1fr; }
+    .day-totals { grid-template-columns:1fr 1fr; }
+    .meal-body { grid-template-columns:1fr; }
+
+    /* Larger tap targets */
+    .tab-btn { padding:13px 16px; }
+    .calc-btn { padding:14px 20px; font-size:12px; }
+    .calc-input { font-size:16px; } /* prevents iOS zoom on focus */
+    .calc-select { font-size:16px; }
+
+    /* Food textarea */
+    textarea { font-size:16px !important; } /* prevents iOS zoom */
+  }
