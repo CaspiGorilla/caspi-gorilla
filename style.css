@@ -1,4 +1,4 @@
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --navy: #0f1923; --navy-light: #1e2d3d;
     --green: #4caf7d; --green-muted: rgba(76,175,125,0.12); --green-border: rgba(76,175,125,0.3);
@@ -475,62 +475,3 @@
     [dir="rtl"] .meal-header { flex-wrap: wrap; }
     [dir="rtl"] .calc-radio-group { justify-content: flex-start; }
   }
-
-  /* ══════════════════════════════════════
-     RTL — Hebrew support
-  ══════════════════════════════════════ */
-  [dir="rtl"] .tabs-bar { direction: rtl; }
-  [dir="rtl"] .planner-nav { direction: rtl; }
-  [dir="rtl"] .meal-header { flex-direction: row-reverse; }
-  [dir="rtl"] .meal-kcal { margin-left: 0; margin-right: auto; }
-  [dir="rtl"] .meal-note { border-left: none; border-right: 3px solid var(--green-border); text-align: right; }
-  [dir="rtl"] .card-title { flex-direction: row-reverse; }
-  [dir="rtl"] .fields { direction: rtl; }
-  [dir="rtl"] .f-label { text-align: right; }
-  [dir="rtl"] .f-val { text-align: right; }
-  [dir="rtl"] .tl-aside { order: 2; }
-  [dir="rtl"] .tl-row > div:last-child { order: 1; text-align: right; }
-  [dir="rtl"] .tl-lbl { text-align: right; }
-  [dir="rtl"] .tl-body-text { text-align: right; }
-  [dir="rtl"] .pill-row { flex-direction: row-reverse; }
-  [dir="rtl"] .day-totals { direction: rtl; }
-  [dir="rtl"] .dt-label { text-align: right; }
-  [dir="rtl"] .planner-legend { direction: rtl; }
-  [dir="rtl"] header { direction: rtl; }
-  [dir="rtl"] .dn-text { text-align: right; }
-  [dir="rtl"] .calc-grid { direction: rtl; }
-  [dir="rtl"] .calc-radio-group { flex-direction: row-reverse; }
-  [dir="rtl"] .results-grid { direction: rtl; }
-  [dir="rtl"] .rc-label { text-align: right; }
-  [dir="rtl"] .rc-value { text-align: right; }
-  [dir="rtl"] .macro-bar-row { flex-direction: row-reverse; }
-  [dir="rtl"] .macro-bar-pct { text-align: left; }
-  [dir="rtl"] .bmr-note { direction: rtl; }
-  [dir="rtl"] .bmr-item { text-align: right; }
-  [dir="rtl"] .goal-tip { text-align: right; }
-  [dir="rtl"] .calc-section-title { text-align: right; }
-  [dir="rtl"] .calc-label { text-align: right; }
-  [dir="rtl"] .calc-input { text-align: right; direction: ltr; }
-  [dir="rtl"] textarea { text-align: right; }
-  [dir="rtl"] #food-ai-status { flex-direction: row-reverse; }
-  [dir="rtl"] table { direction: rtl; }
-  [dir="rtl"] th, [dir="rtl"] td { text-align: right; }
-  [dir="rtl"] .modal-header { flex-direction: row-reverse; }
-  [dir="rtl"] .modal-cat { text-align: right; }
-  [dir="rtl"] .modal-title { text-align: right; }
-  [dir="rtl"] .modal-section-title { text-align: right; }
-  [dir="rtl"] .ingredients-list li { border-left: none; border-right: 3px solid var(--green-border); border-radius: 3px 0 0 3px; text-align: right; }
-  [dir="rtl"] .steps-list li { flex-direction: row-reverse; text-align: right; }
-  [dir="rtl"] .modal-tip { text-align: right; }
-  [dir="rtl"] .modal-tip strong { text-align: right; }
-  [dir="rtl"] .r-cat { text-align: right; }
-  [dir="rtl"] .r-name { text-align: right; }
-  [dir="rtl"] .r-meta { flex-direction: row-reverse; }
-  [dir="rtl"] footer { direction: rtl; }
-  [dir="rtl"] .dietitian-note { flex-direction: row-reverse; }
-  [dir="rtl"] .desc { text-align: right; }
-  [dir="rtl"] .mc-label { text-align: right; }
-  [dir="rtl"] .mc-value { text-align: right; }
-  [dir="rtl"] .mc-portion { text-align: right; }
-  [dir="rtl"] .meal-component { align-items: flex-end; }
-  [dir="rtl"] .per-meal-fields { direction: rtl; }
