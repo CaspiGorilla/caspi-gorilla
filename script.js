@@ -19,6 +19,236 @@ function openRecipe(id) {
 function closeRecipe() { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
 function closeModalOnBg(e) { if(e.target===document.getElementById('modal-overlay')) closeRecipe(); }
 
+// ══════════════════════════════════════
+// LANGUAGE / i18n SYSTEM
+// ══════════════════════════════════════
+let currentLang = 'en';
+
+const TRANSLATIONS = {
+  en: {
+    // Header
+    subtitle: 'Wellness · Recipes · Calculator',
+    // Tabs
+    tab_wellness: 'Wellness', tab_recipes: 'Recipes', tab_calculator: 'Calculator',
+    // Dietitian note
+    dietitian_title: 'Dietitian Plan — Gal · March 2026',
+    dietitian_body: 'Personal meal plan based on your clinical dietitian\'s guidelines. Carb counting protocol active. Max 1 fat serving per meal. Aerobic exercise 2–3×/week recommended.',
+    // Legend
+    leg_protein: 'PROTEIN', leg_carbs: 'CARBS', leg_fat: 'FAT', leg_veg: 'VEGETABLES',
+    // Days
+    day_sun: 'Sun', day_mon: 'Mon', day_tue: 'Tue', day_wed: 'Wed', day_thu: 'Thu', day_fri: 'Fri', day_sat: 'Sat',
+    // Meal labels
+    total_calories: 'Total Calories', protein: 'Protein', carbs: 'Carbs', fat: 'Fat',
+    kcal_day: 'kcal / day', grams: 'grams',
+    label_protein: 'Protein', label_carbs: 'Carbs', label_fat: 'Fat', label_veg: 'Vegetables', label_timing: 'Timing',
+    // Sunday meals
+    sun_b_tag: 'Breakfast · 07:30', sun_b_title: 'Greek Yogurt Bowl', sun_b_kcal: '~380 kcal',
+    sun_b_p: 'Greek yogurt 3%', sun_b_p_amt: '1 cup (200ml)', sun_b_c: 'Oats + banana slices', sun_b_c_amt: '3 tbsp oats + ½ banana', sun_b_v: 'Cherry tomatoes', sun_b_v_amt: 'Free amount',
+    sun_b_note: 'Add a drizzle of honey if desired. Keep fat to max 1 serving — skip butter/oil if having yogurt.',
+    sun_l_tag: 'Lunch · 13:00', sun_l_title: 'Grilled Chicken & Rice', sun_l_kcal: '~520 kcal',
+    sun_l_p: 'Grilled chicken breast', sun_l_p_amt: '175g', sun_l_c: 'White rice + green lentils mixed', sun_l_c_amt: '5 tbsp cooked', sun_l_v: 'Cucumber, tomato, parsley salad', sun_l_v_amt: 'Unlimited',
+    sun_l_note: 'Mix lentils into the rice — great way to add plant protein and slow the carb release. Season with olive oil (1 tsp only).',
+    sun_s_tag: 'Snack · 16:30', sun_s_title: 'Pre-Workout Fuel', sun_s_kcal: '~200 kcal',
+    sun_s_p: 'White yogurt', sun_s_p_amt: '1 cup', sun_s_c: 'Apple (medium)', sun_s_c_amt: '1 whole', sun_s_t: 'Eat 1.5h before workout',
+    sun_s_note: 'If craving something sweet: keep the yogurt as your protein base, then add 4 squares of dark chocolate instead of the apple.',
+    sun_d_tag: 'Dinner · 19:30', sun_d_title: 'Egg & Tuna Plate', sun_d_kcal: '~380 kcal',
+    sun_d_p: '2 eggs scrambled + ½ tin tuna in water', sun_d_p_amt: '2 eggs + 60g tuna', sun_d_c: 'Whole wheat pita', sun_d_c_amt: '1 small (½ pita)', sun_d_v: 'Sliced cucumbers, radish, green onion', sun_d_v_amt: 'Free amount',
+    sun_d_note: 'Add ½ cup cottage 5% on the side if still hungry. Max 1 fat serving — use a little olive oil for eggs only.',
+    // Calculator
+    calc_title: 'Nutrition Calculator', calc_personal: 'Personal Info', calc_age: 'Age (years)', calc_weight: 'Weight (kg)', calc_height: 'Height (cm)', calc_gender: 'Gender',
+    calc_male: 'Male', calc_female: 'Female', calc_activity: 'Activity Level',
+    act_sed: 'Sedentary', act_light: 'Light (1–2×/wk)', act_mod: 'Moderate (3–5×/wk)', act_active: 'Active (6–7×/wk)', act_very: 'Very Active',
+    calc_goal: 'Goal', goal_lose: 'Lose Weight', goal_maintain: 'Maintain', goal_gain: 'Gain Muscle',
+    calc_btn: 'Calculate My Macros →',
+    bmr_label: 'BMR (Base)', tdee_label: 'TDEE (Maintenance)', target_label: 'Target Calories',
+    res_kcal: 'Calories', res_protein: 'Protein', res_carbs: 'Carbs', res_fat: 'Fat',
+    kcal_day2: 'kcal / day', g_day: 'grams / day',
+    macro_split: 'Macro Split', per_meal: 'Per-Meal Breakdown', four_meals: '4 MEALS / DAY',
+    cal_meal: 'Calories / meal', prot_meal: 'Protein / meal', carb_meal: 'Carbs / meal', fat_meal: 'Fat / meal',
+    // Food log
+    food_log_title: 'Food Log', food_log_badge: 'AI-POWERED',
+    food_mode_type: '— TYPE', food_mode_photo: '📷 PHOTO',
+    food_desc_title: 'Describe what you ate',
+    food_desc_sub: 'Just write naturally — amounts, units, anything. The AI will parse it and estimate the macros.',
+    food_placeholder: 'e.g. 1 hamburger, 200g fries and 1 coke zero 500ml',
+    food_shortcut: 'Ctrl+Enter to submit', food_analyze_btn: 'Analyze with AI →',
+    food_photo_title: 'Take or upload a photo',
+    food_photo_sub: 'The AI will identify the food in the image and estimate the nutrition values automatically.',
+    food_tap: 'Tap to upload a photo', food_formats: 'JPG, PNG, HEIC supported',
+    food_camera: '📸 Camera', food_gallery: '🖼 Gallery',
+    food_analyze_photo: 'Analyze Photo with AI →',
+    food_item: 'Food Item', food_amount: 'Amount', food_kcal_col: 'Kcal',
+    food_total: 'TOTAL', food_clear: 'Clear All', food_add_more: '+ Add More',
+    // Footer
+    footer: 'Wellness · Recipes · Calculator',
+  },
+  he: {
+    subtitle: 'בריאות · מתכונים · מחשבון',
+    tab_wellness: 'בריאות', tab_recipes: 'מתכונים', tab_calculator: 'מחשבון',
+    dietitian_title: 'תפריט דיאטנית — גל · מרץ 2026',
+    dietitian_body: 'תפריט אישי על פי הנחיות הדיאטנית הקלינית שלך. פרוטוקול ספירת פחמימות פעיל. מקסימום מנת שומן אחת בכל ארוחה. מומלץ פעילות אירובית 2–3 פעמים בשבוע.',
+    leg_protein: 'חלבון', leg_carbs: 'פחמימות', leg_fat: 'שומן', leg_veg: 'ירקות',
+    day_sun: 'ראשון', day_mon: 'שני', day_tue: 'שלישי', day_wed: 'רביעי', day_thu: 'חמישי', day_fri: 'שישי', day_sat: 'שבת',
+    total_calories: 'סה״כ קלוריות', protein: 'חלבון', carbs: 'פחמימות', fat: 'שומן',
+    kcal_day: 'קק״ל / יום', grams: 'גרם',
+    label_protein: 'חלבון', label_carbs: 'פחמימות', label_fat: 'שומן', label_veg: 'ירקות', label_timing: 'תזמון',
+    sun_b_tag: 'בוקר · 07:30', sun_b_title: 'קערת יוגורט יווני', sun_b_kcal: '~380 קק״ל',
+    sun_b_p: 'יוגורט יווני 3%', sun_b_p_amt: 'כוס אחת (200 מ"ל)', sun_b_c: 'שיבולת שועל + פרוסות בננה', sun_b_c_amt: '3 כפות שיבולת + ½ בננה', sun_b_v: 'עגבניות שרי', sun_b_v_amt: 'כמות חופשית',
+    sun_b_note: 'אפשר להוסיף מעט דבש. מקסימום מנת שומן אחת — אל תוסיף חמאה/שמן אם אוכל יוגורט.',
+    sun_l_tag: 'צהריים · 13:00', sun_l_title: 'חזה עוף על האש עם אורז', sun_l_kcal: '~520 קק״ל',
+    sun_l_p: 'חזה עוף על האש', sun_l_p_amt: '175 גרם', sun_l_c: 'אורז לבן + עדשים ירוקות מעורבב', sun_l_c_amt: '5 כפות מבושל', sun_l_v: 'סלט מלפפון, עגבניה ופטרוזיליה', sun_l_v_amt: 'ללא הגבלה',
+    sun_l_note: 'ערבב עדשים לתוך האורז — דרך מצוינת להוסיף חלבון צמחי ולהאט את ספיגת הפחמימות. תבל בשמן זית (כפית בלבד).',
+    sun_s_tag: 'ביניים · 16:30', sun_s_title: 'דלק לאימון', sun_s_kcal: '~200 קק״ל',
+    sun_s_p: 'יוגורט לבן', sun_s_p_amt: 'כוס אחת', sun_s_c: 'תפוח (בינוני)', sun_s_c_amt: '1 שלם', sun_s_t: 'לאכול שעה וחצי לפני האימון',
+    sun_s_note: 'אם חושק במשהו מתוק: שמור את היוגורט כבסיס החלבוני, והוסף 4 קוביות שוקולד מריר במקום התפוח.',
+    sun_d_tag: 'ערב · 19:30', sun_d_title: 'צלחת ביצים וטונה', sun_d_kcal: '~380 קק״ל',
+    sun_d_p: '2 ביצים מקושקשות + ½ פחית טונה במים', sun_d_p_amt: '2 ביצים + 60 גרם טונה', sun_d_c: 'פיתה מחיטה מלאה', sun_d_c_amt: '1 קטנה (½ פיתה)', sun_d_v: 'מלפפון פרוס, צנון, בצל ירוק', sun_d_v_amt: 'כמות חופשית',
+    sun_d_note: 'הוסף ½ כוס קוטג׳ 5% בצד אם עדיין רעב. מקסימום מנת שומן אחת — שמן זית קצת בלבד לביצים.',
+    calc_title: 'מחשבון תזונה', calc_personal: 'פרטים אישיים', calc_age: 'גיל (שנים)', calc_weight: 'משקל (ק"ג)', calc_height: 'גובה (ס"מ)', calc_gender: 'מין',
+    calc_male: 'זכר', calc_female: 'נקבה', calc_activity: 'רמת פעילות',
+    act_sed: 'יושבני', act_light: 'קלה (1–2×/שבוע)', act_mod: 'בינונית (3–5×/שבוע)', act_active: 'פעיל (6–7×/שבוע)', act_very: 'פעיל מאוד',
+    calc_goal: 'מטרה', goal_lose: 'ירידה במשקל', goal_maintain: 'שמירה', goal_gain: 'עלייה בשריר',
+    calc_btn: 'חשב את המקרו שלי →',
+    bmr_label: 'BMR (בסיסי)', tdee_label: 'TDEE (תחזוקה)', target_label: 'קלוריות מטרה',
+    res_kcal: 'קלוריות', res_protein: 'חלבון', res_carbs: 'פחמימות', res_fat: 'שומן',
+    kcal_day2: 'קק״ל / יום', g_day: 'גרם / יום',
+    macro_split: 'פיצול מקרו', per_meal: 'פירוט לפי ארוחה', four_meals: '4 ארוחות / יום',
+    cal_meal: 'קלוריות / ארוחה', prot_meal: 'חלבון / ארוחה', carb_meal: 'פחמימות / ארוחה', fat_meal: 'שומן / ארוחה',
+    food_log_title: 'יומן אכילה', food_log_badge: 'מבוסס AI',
+    food_mode_type: '— הקלד', food_mode_photo: '📷 תמונה',
+    food_desc_title: 'תאר מה אכלת',
+    food_desc_sub: 'כתוב בחופשיות — כמויות, יחידות, הכל. ה-AI יפרש ויחשב את הערכים.',
+    food_placeholder: 'לדוגמה: המבורגר אחד, 200 גרם צ׳יפס וקולה זירו 500 מ"ל',
+    food_shortcut: 'Ctrl+Enter לשליחה', food_analyze_btn: 'ניתוח עם AI →',
+    food_photo_title: 'צלם או העלה תמונה',
+    food_photo_sub: 'ה-AI יזהה את המזון בתמונה ויחשב את הערכים התזונתיים אוטומטית.',
+    food_tap: 'לחץ להעלאת תמונה', food_formats: 'JPG, PNG, HEIC נתמכים',
+    food_camera: '📸 מצלמה', food_gallery: '🖼 גלריה',
+    food_analyze_photo: 'ניתוח תמונה עם AI →',
+    food_item: 'מזון', food_amount: 'כמות', food_kcal_col: 'קק״ל',
+    food_total: 'סה״כ', food_clear: 'נקה הכל', food_add_more: '+ הוסף עוד',
+    footer: 'בריאות · מתכונים · מחשבון',
+  }
+};
+
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'he' : 'en';
+  const html = document.documentElement;
+  html.lang = currentLang;
+  html.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+  document.getElementById('lang-btn').textContent = currentLang === 'he' ? 'EN / עב' : 'עב / EN';
+  applyTranslations();
+}
+
+function t(key) {
+  return TRANSLATIONS[currentLang][key] || TRANSLATIONS['en'][key] || key;
+}
+
+function applyTranslations() {
+  const L = currentLang;
+  // Header subtitle
+  document.querySelector('[data-en="Wellness · Recipes · Calculator"]').textContent = t('subtitle');
+  // Tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    const key = 'tab_' + btn.getAttribute('onclick').match(/'(\w+)'/)[1];
+    btn.textContent = t(key);
+  });
+  // Dietitian note
+  const dn = document.querySelector('.dn-text');
+  if (dn) {
+    dn.innerHTML = `<strong>${t('dietitian_title')}</strong>${t('dietitian_body')}`;
+  }
+  // Legend
+  const legends = document.querySelectorAll('.legend-item');
+  const legKeys = ['leg_protein','leg_carbs','leg_fat','leg_veg'];
+  legends.forEach((el, i) => {
+    const dot = el.querySelector('.legend-dot');
+    el.textContent = t(legKeys[i]);
+    el.prepend(dot);
+  });
+  // Day buttons
+  const days = ['sun','mon','tue','wed','thu','fri','sat'];
+  document.querySelectorAll('.day-btn').forEach((btn, i) => {
+    btn.textContent = t('day_' + days[i]);
+  });
+  // Day totals labels
+  document.querySelectorAll('.dt-label').forEach(el => {
+    const txt = el.textContent.trim();
+    if (txt === 'Total Calories' || txt === 'סה״כ קלוריות') el.textContent = t('total_calories');
+    if (txt === 'Protein' || txt === 'חלבון') el.textContent = t('protein');
+    if (txt === 'Carbs' || txt === 'פחמימות') el.textContent = t('carbs');
+    if (txt === 'Fat' || txt === 'שומן') el.textContent = t('fat');
+  });
+  document.querySelectorAll('.dt-unit').forEach(el => {
+    if (el.textContent.includes('kcal') || el.textContent.includes('קק')) el.textContent = t('kcal_day');
+    if (el.textContent === 'grams' || el.textContent === 'גרם') el.textContent = t('grams');
+  });
+  // Meal component labels
+  document.querySelectorAll('.mc-label').forEach(el => {
+    const txt = el.textContent.trim();
+    if (txt === 'Protein' || txt === 'חלבון') el.textContent = t('label_protein');
+    else if (txt === 'Carbs' || txt === 'פחמימות') el.textContent = t('label_carbs');
+    else if (txt === 'Fat' || txt === 'שומן') el.textContent = t('label_fat');
+    else if (txt === 'Vegetables' || txt === 'ירקות') el.textContent = t('label_veg');
+    else if (txt === 'Timing' || txt === 'תזמון') el.textContent = t('label_timing');
+  });
+  // Sunday meals specifically
+  const sunKeys = [
+    ['sun_b_tag','sun_b_title','sun_b_kcal','sun_b_p','sun_b_p_amt','sun_b_c','sun_b_c_amt','sun_b_v','sun_b_v_amt','sun_b_note'],
+    ['sun_l_tag','sun_l_title','sun_l_kcal','sun_l_p','sun_l_p_amt','sun_l_c','sun_l_c_amt','sun_l_v','sun_l_v_amt','sun_l_note'],
+    ['sun_s_tag','sun_s_title','sun_s_kcal','sun_s_p','sun_s_p_amt','sun_s_c','sun_s_c_amt','sun_s_t','—','sun_s_note'],
+    ['sun_d_tag','sun_d_title','sun_d_kcal','sun_d_p','sun_d_p_amt','sun_d_c','sun_d_c_amt','sun_d_v','sun_d_v_amt','sun_d_note'],
+  ];
+  const sunPanel = document.getElementById('day-sun');
+  if (sunPanel) {
+    const blocks = sunPanel.querySelectorAll('.meal-block');
+    blocks.forEach((block, bi) => {
+      const keys = sunKeys[bi];
+      const tag = block.querySelector('.meal-time-tag'); if (tag) tag.textContent = t(keys[0]);
+      const title = block.querySelector('.meal-title'); if (title) title.textContent = t(keys[1]);
+      const kcal = block.querySelector('.meal-kcal'); if (kcal) kcal.textContent = t(keys[2]);
+      const comps = block.querySelectorAll('.meal-component');
+      if (comps[0]) { comps[0].querySelector('.mc-value').textContent = t(keys[3]); comps[0].querySelector('.mc-portion').textContent = t(keys[4]); }
+      if (comps[1]) { comps[1].querySelector('.mc-value').textContent = t(keys[5]); comps[1].querySelector('.mc-portion').textContent = t(keys[6]); }
+      if (comps[2]) { comps[2].querySelector('.mc-value').textContent = t(keys[7]); comps[2].querySelector('.mc-portion').textContent = t(keys[8]); }
+      const note = block.querySelector('.meal-note'); if (note) note.textContent = t(keys[9]);
+    });
+  }
+  // Calculator
+  translateEl('[data-i18n="calc_title"]', 'calc_title');
+  // Food log
+  translateEl('[data-i18n="food_log_title"]', 'food_log_title');
+  translateEl('[data-i18n="food_log_badge"]', 'food_log_badge');
+  translateEl('[data-i18n="food_desc_title"]', 'food_desc_title');
+  translateEl('[data-i18n="food_desc_sub"]', 'food_desc_sub');
+  translateAttr('[data-i18n-ph="food_placeholder"]', 'placeholder', 'food_placeholder');
+  translateEl('[data-i18n="food_shortcut"]', 'food_shortcut');
+  translateEl('[data-i18n="food_analyze_btn"]', 'food_analyze_btn');
+  translateEl('[data-i18n="food_photo_title"]', 'food_photo_title');
+  translateEl('[data-i18n="food_photo_sub"]', 'food_photo_sub');
+  translateEl('[data-i18n="food_tap"]', 'food_tap');
+  translateEl('[data-i18n="food_formats"]', 'food_formats');
+  translateEl('[data-i18n="food_camera"]', 'food_camera');
+  translateEl('[data-i18n="food_gallery"]', 'food_gallery');
+  translateEl('[data-i18n="food_analyze_photo"]', 'food_analyze_photo');
+  translateEl('[data-i18n="food_total"]', 'food_total');
+  translateEl('[data-i18n="food_clear"]', 'food_clear');
+  translateEl('[data-i18n="food_add_more"]', 'food_add_more');
+  // Footer
+  const footer = document.querySelector('footer');
+  if (footer) footer.innerHTML = `<span>CASPI GORILLA</span> — ${t('footer')} · © 2026`;
+}
+
+function translateEl(selector, key) {
+  const el = document.querySelector(selector);
+  if (el) el.textContent = t(key);
+}
+
+function translateAttr(selector, attr, key) {
+  const el = document.querySelector(selector);
+  if (el) el[attr] = t(key);
+}
+
 // ── FOOD LOG STATE ──
 let foodLog = [];
 
@@ -308,3 +538,50 @@ function switchDay(name, btn) {
 }
 
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeRecipe(); });
+
+// ── LANGUAGE / i18n ──
+let currentLang = localStorage.getItem('cg_lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('cg_lang', lang);
+
+  const t = TRANSLATIONS[lang];
+  const isHe = lang === 'he';
+
+  // Update html dir + lang
+  document.documentElement.lang = lang;
+  document.documentElement.dir = isHe ? 'rtl' : 'ltr';
+
+  // Update body font for Hebrew
+  document.body.style.fontFamily = isHe
+    ? "'Heebo', 'IBM Plex Sans', sans-serif"
+    : "'IBM Plex Sans', sans-serif";
+
+  // Translate all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+
+  // Update lang button
+  const btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = isHe ? 'EN' : 'עב';
+
+  // Update placeholder on food textarea
+  const ta = document.getElementById('food-text-input');
+  if (ta && t.food_placeholder) ta.placeholder = t.food_placeholder;
+
+  // Update recipe section labels (they use class, not data-i18n)
+  const labels = document.querySelectorAll('.recipe-section-label');
+  if (labels[0] && t.recipe_section_creami) labels[0].textContent = t.recipe_section_creami;
+  if (labels[1] && t.recipe_section_passover) labels[1].textContent = t.recipe_section_passover;
+}
+
+function toggleLang() {
+  applyLang(currentLang === 'en' ? 'he' : 'en');
+}
+
+// Apply on load
+applyLang(currentLang);
+

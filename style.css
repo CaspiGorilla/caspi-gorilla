@@ -188,6 +188,54 @@
   .goal-tip { background:var(--green-muted); border:1px solid var(--green-border); border-radius:4px; padding:14px 18px; font-size:13px; color:var(--text-muted); line-height:1.8; margin-bottom:16px; }
   .goal-tip strong { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; letter-spacing:0.1em; color:var(--green); text-transform:uppercase; display:block; margin-bottom:4px; }
 
+  /* ══════════════════════════════════════
+     HEBREW / RTL SUPPORT
+  ══════════════════════════════════════ */
+  html[lang="he"] body {
+    font-family: 'Heebo', sans-serif;
+    direction: rtl;
+    text-align: right;
+  }
+
+  html[lang="he"] .tabs-bar { direction: rtl; }
+  html[lang="he"] .tab-btn { letter-spacing: 0; }
+  html[lang="he"] .planner-nav { direction: rtl; }
+  html[lang="he"] .day-btn { letter-spacing: 0; }
+  html[lang="he"] .meal-header { flex-direction: row-reverse; }
+  html[lang="he"] .meal-kcal { margin-left: 0; margin-right: auto; }
+  html[lang="he"] .meal-note { border-left: none; border-right: 3px solid var(--green-border); }
+  html[lang="he"] .tl-row { flex-direction: row-reverse; }
+  html[lang="he"] .tl-aside { order: 2; }
+  html[lang="he"] .card-title { flex-direction: row-reverse; }
+  html[lang="he"] .fields { direction: rtl; }
+  html[lang="he"] .pill-row { direction: rtl; }
+  html[lang="he"] .planner-legend { direction: rtl; }
+  html[lang="he"] .dietitian-note { flex-direction: row-reverse; }
+  html[lang="he"] .dn-text strong { text-align: right; }
+  html[lang="he"] .day-totals { direction: rtl; }
+  html[lang="he"] .results-grid { direction: rtl; }
+  html[lang="he"] .calc-radio-group { direction: rtl; }
+  html[lang="he"] .calc-grid { direction: rtl; }
+  html[lang="he"] .bmr-note { direction: rtl; }
+  html[lang="he"] .bmr-item { border-right: none; border-left: 1px solid var(--card-border); padding: 0 0 0 20px; }
+  html[lang="he"] .bmr-item:last-child { border-left: none; }
+  html[lang="he"] .macro-bar-row { flex-direction: row-reverse; }
+  html[lang="he"] .macro-bar-pct { text-align: left; }
+  html[lang="he"] .modal-header { flex-direction: row-reverse; }
+  html[lang="he"] .modal-meta { direction: rtl; }
+  html[lang="he"] .steps-list li { flex-direction: row-reverse; }
+  html[lang="he"] .ingredients-list li { border-left: none; border-right: 3px solid var(--green-border); border-radius: 3px 0 0 3px; }
+  html[lang="he"] .meal-time-tag { letter-spacing: 0; }
+  html[lang="he"] .badge, html[lang="he"] .badge-amber { letter-spacing: 0; }
+  html[lang="he"] .f-label { letter-spacing: 0; }
+  html[lang="he"] .mc-label { letter-spacing: 0; }
+  html[lang="he"] header > div { direction: rtl; }
+  html[lang="he"] #lang-btn { right: auto; left: 0; }
+  html[lang="he"] .r-body { text-align: right; direction: rtl; }
+  html[lang="he"] .r-meta { flex-direction: row-reverse; }
+  html[lang="he"] table { direction: rtl; }
+  html[lang="he"] th, html[lang="he"] td { text-align: right; }
+
   footer { background:var(--navy); border-top:1px solid var(--green); padding:20px 24px; text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(255,255,255,0.25); letter-spacing:0.1em; }
   footer span { color:var(--green); }
 
@@ -326,3 +374,163 @@
     button[onclick="analyzeFood()"],
     button[onclick="analyzePhoto()"] { width:100% !important; }
   }
+
+  /* ══════════════════════════════════════
+     RTL — Hebrew Support
+  ══════════════════════════════════════ */
+  [dir="rtl"] body { font-family: 'Heebo', 'IBM Plex Sans', sans-serif; }
+
+  /* Flip text alignment */
+  [dir="rtl"] .card-title { flex-direction: row-reverse; }
+  [dir="rtl"] .meal-header { flex-direction: row-reverse; }
+  [dir="rtl"] .meal-kcal { margin-left: 0; margin-right: auto; }
+  [dir="rtl"] .meal-note { border-left: none; border-right: 3px solid var(--green-border); }
+  [dir="rtl"] .tl-body-text { text-align: right; }
+  [dir="rtl"] .tl-lbl { text-align: right; }
+  [dir="rtl"] .dt-label { text-align: right; }
+  [dir="rtl"] .dt-value { text-align: right; }
+
+  /* Flip field labels */
+  [dir="rtl"] .f-label { text-align: right; }
+  [dir="rtl"] .f-val { text-align: right; }
+  [dir="rtl"] .mc-label { text-align: right; }
+  [dir="rtl"] .mc-value { text-align: right; }
+  [dir="rtl"] .mc-portion { text-align: right; }
+
+  /* Dietitian note */
+  [dir="rtl"] .dietitian-note { flex-direction: row-reverse; }
+  [dir="rtl"] .dn-text { text-align: right; }
+
+  /* Macro bars */
+  [dir="rtl"] .macro-bar-row { flex-direction: row-reverse; }
+  [dir="rtl"] .macro-bar-label { text-align: right; }
+  [dir="rtl"] .macro-bar-pct { text-align: left; }
+
+  /* BMR note */
+  [dir="rtl"] .bmr-item { text-align: right; }
+  [dir="rtl"] .bmr-item { border-right: 1px solid var(--card-border); border-left: none; }
+  [dir="rtl"] .bmr-item:last-child { border-right: none; }
+  [dir="rtl"] .bmr-item:first-child { border-right: none; }
+
+  /* Results */
+  [dir="rtl"] .result-card { text-align: right; }
+  [dir="rtl"] .rc-label { text-align: right; }
+
+  /* Desc text */
+  [dir="rtl"] .desc { text-align: right; }
+  [dir="rtl"] .card-dark .desc { text-align: right; }
+
+  /* Pill rows */
+  [dir="rtl"] .pill-row { flex-direction: row-reverse; }
+
+  /* Calc labels */
+  [dir="rtl"] .calc-label { text-align: right; }
+  [dir="rtl"] .calc-section-title { text-align: right; }
+  [dir="rtl"] .calc-radio-group { flex-direction: row-reverse; justify-content: flex-end; }
+
+  /* Recipe section label */
+  [dir="rtl"] .recipe-section-label { text-align: right; }
+  [dir="rtl"] .r-cat { text-align: right; }
+  [dir="rtl"] .r-name { text-align: right; }
+  [dir="rtl"] .r-meta { flex-direction: row-reverse; }
+
+  /* Modal */
+  [dir="rtl"] .modal-header { flex-direction: row-reverse; }
+  [dir="rtl"] .modal-cat { text-align: right; }
+  [dir="rtl"] .modal-title { text-align: right; }
+  [dir="rtl"] .modal-section-title { text-align: right; }
+  [dir="rtl"] .ingredients-list li { border-left: none; border-right: 3px solid var(--green-border); border-radius: 3px 0 0 3px; text-align: right; }
+  [dir="rtl"] .steps-list li { flex-direction: row-reverse; text-align: right; }
+  [dir="rtl"] .modal-tip { text-align: right; }
+  [dir="rtl"] .modal-meta { flex-direction: row-reverse; }
+  [dir="rtl"] .modal-meta-item { text-align: right; }
+
+  /* Tables */
+  [dir="rtl"] table th, [dir="rtl"] table td { text-align: right; }
+  [dir="rtl"] #food-log-section th:first-child,
+  [dir="rtl"] #food-log-section td:first-child { text-align: right; }
+
+  /* Food log status */
+  [dir="rtl"] #food-ai-status { direction: rtl; }
+
+  /* Header lang btn */
+  [dir="rtl"] #lang-btn { right: auto; left: 0; }
+
+  /* Footer */
+  [dir="rtl"] footer { direction: rtl; }
+
+  /* Goal tip */
+  [dir="rtl"] .goal-tip { text-align: right; direction: rtl; }
+
+  /* Planner legend */
+  [dir="rtl"] .planner-legend { flex-direction: row-reverse; }
+  [dir="rtl"] .legend-item { flex-direction: row-reverse; }
+
+  /* Per-meal fields */
+  [dir="rtl"] .fields { direction: rtl; }
+  [dir="rtl"] #per-meal-fields { direction: rtl; }
+
+  /* Day totals - mobile RTL */
+  @media (max-width: 768px) {
+    [dir="rtl"] .meal-header { flex-wrap: wrap; }
+    [dir="rtl"] .calc-radio-group { justify-content: flex-start; }
+  }
+
+  /* ══════════════════════════════════════
+     RTL — Hebrew support
+  ══════════════════════════════════════ */
+  [dir="rtl"] .tabs-bar { direction: rtl; }
+  [dir="rtl"] .planner-nav { direction: rtl; }
+  [dir="rtl"] .meal-header { flex-direction: row-reverse; }
+  [dir="rtl"] .meal-kcal { margin-left: 0; margin-right: auto; }
+  [dir="rtl"] .meal-note { border-left: none; border-right: 3px solid var(--green-border); text-align: right; }
+  [dir="rtl"] .card-title { flex-direction: row-reverse; }
+  [dir="rtl"] .fields { direction: rtl; }
+  [dir="rtl"] .f-label { text-align: right; }
+  [dir="rtl"] .f-val { text-align: right; }
+  [dir="rtl"] .tl-aside { order: 2; }
+  [dir="rtl"] .tl-row > div:last-child { order: 1; text-align: right; }
+  [dir="rtl"] .tl-lbl { text-align: right; }
+  [dir="rtl"] .tl-body-text { text-align: right; }
+  [dir="rtl"] .pill-row { flex-direction: row-reverse; }
+  [dir="rtl"] .day-totals { direction: rtl; }
+  [dir="rtl"] .dt-label { text-align: right; }
+  [dir="rtl"] .planner-legend { direction: rtl; }
+  [dir="rtl"] header { direction: rtl; }
+  [dir="rtl"] .dn-text { text-align: right; }
+  [dir="rtl"] .calc-grid { direction: rtl; }
+  [dir="rtl"] .calc-radio-group { flex-direction: row-reverse; }
+  [dir="rtl"] .results-grid { direction: rtl; }
+  [dir="rtl"] .rc-label { text-align: right; }
+  [dir="rtl"] .rc-value { text-align: right; }
+  [dir="rtl"] .macro-bar-row { flex-direction: row-reverse; }
+  [dir="rtl"] .macro-bar-pct { text-align: left; }
+  [dir="rtl"] .bmr-note { direction: rtl; }
+  [dir="rtl"] .bmr-item { text-align: right; }
+  [dir="rtl"] .goal-tip { text-align: right; }
+  [dir="rtl"] .calc-section-title { text-align: right; }
+  [dir="rtl"] .calc-label { text-align: right; }
+  [dir="rtl"] .calc-input { text-align: right; direction: ltr; }
+  [dir="rtl"] textarea { text-align: right; }
+  [dir="rtl"] #food-ai-status { flex-direction: row-reverse; }
+  [dir="rtl"] table { direction: rtl; }
+  [dir="rtl"] th, [dir="rtl"] td { text-align: right; }
+  [dir="rtl"] .modal-header { flex-direction: row-reverse; }
+  [dir="rtl"] .modal-cat { text-align: right; }
+  [dir="rtl"] .modal-title { text-align: right; }
+  [dir="rtl"] .modal-section-title { text-align: right; }
+  [dir="rtl"] .ingredients-list li { border-left: none; border-right: 3px solid var(--green-border); border-radius: 3px 0 0 3px; text-align: right; }
+  [dir="rtl"] .steps-list li { flex-direction: row-reverse; text-align: right; }
+  [dir="rtl"] .modal-tip { text-align: right; }
+  [dir="rtl"] .modal-tip strong { text-align: right; }
+  [dir="rtl"] .r-cat { text-align: right; }
+  [dir="rtl"] .r-name { text-align: right; }
+  [dir="rtl"] .r-meta { flex-direction: row-reverse; }
+  [dir="rtl"] footer { direction: rtl; }
+  [dir="rtl"] .dietitian-note { flex-direction: row-reverse; }
+  [dir="rtl"] .desc { text-align: right; }
+  [dir="rtl"] .mc-label { text-align: right; }
+  [dir="rtl"] .mc-value { text-align: right; }
+  [dir="rtl"] .mc-portion { text-align: right; }
+  [dir="rtl"] .meal-component { align-items: flex-end; }
+  [dir="rtl"] .per-meal-fields { direction: rtl; }
