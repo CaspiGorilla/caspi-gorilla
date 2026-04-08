@@ -1,4 +1,4 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --navy: #0f1923; --navy-light: #1e2d3d;
     --green: #4caf7d; --green-muted: rgba(76,175,125,0.12); --green-border: rgba(76,175,125,0.3);
@@ -474,4 +474,10 @@
   @media (max-width: 768px) {
     [dir="rtl"] .meal-header { flex-wrap: wrap; }
     [dir="rtl"] .calc-radio-group { justify-content: flex-start; }
+  }
+
+  /* ── MEAL REGEN ANIMATION ── */
+  @keyframes fadeInMeal {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
   }

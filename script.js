@@ -21,6 +21,10 @@ function closeRecipe() { document.getElementById('modal-overlay').classList.remo
 function closeModalOnBg(e) { if(e.target===document.getElementById('modal-overlay')) closeRecipe(); }
 
 // ── TABS & DAYS ──
+let activeDay = 'sun';
+
+const DAY_NAMES = { sun:'Sunday', mon:'Monday', tue:'Tuesday', wed:'Wednesday', thu:'Thursday', fri:'Friday', sat:'Saturday' };
+
 function switchTab(name, btn) {
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -33,6 +37,93 @@ function switchDay(name, btn) {
   document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('day-'+name).classList.add('active');
   btn.classList.add('active');
+  activeDay = name;
+}
+
+async function regenerateDay() {
+  const btn = document.getElementById('regen-btn');
+  const icon = document.getElementById('regen-icon');
+  const panel = document.getElementById('day-' + activeDay);
+  if (!panel) return;
+
+  // Spin icon + disable button
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
+  let spinning = true;
+  let deg = 0;
+  const spinInterval = setInterval(() => {
+    deg += 20;
+    icon.style.transform = `rotate(${deg}deg)`;
+  }, 40);
+
+  // Overlay the panel with a loading state
+  const mealBlocks = panel.querySelectorAll('.meal-block');
+  mealBlocks.forEach(b => { b.style.opacity = '0.35'; b.style.pointerEvents = 'none'; });
+
+  try {
+    const response = await fetch('/.netlify/functions/generate-meal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ day: DAY_NAMES[activeDay] })
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Function error');
+
+    const { totals, meals } = data;
+    if (!meals || meals.length === 0) throw new Error('No meals returned');
+
+    // Update totals bar
+    const totalsEl = panel.querySelector('.day-totals');
+    if (totalsEl && totals) {
+      totalsEl.innerHTML = `
+        <div class="dt-card dt-kcal"><div class="dt-label">Total Calories</div><div class="dt-value">${totals.kcal}</div><div class="dt-unit">kcal / day</div></div>
+        <div class="dt-card dt-protein"><div class="dt-label">Protein</div><div class="dt-value">${totals.protein}g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-carbs"><div class="dt-label">Carbs</div><div class="dt-value">${totals.carbs}g</div><div class="dt-unit">grams</div></div>
+        <div class="dt-card dt-fat"><div class="dt-label">Fat</div><div class="dt-value">${totals.fat}g</div><div class="dt-unit">grams</div></div>`;
+    }
+
+    // Replace meal blocks
+    const mealTypes = { breakfast:'', lunch:'', snack:'snack', dinner:'' };
+    mealBlocks.forEach(b => b.remove());
+
+    meals.forEach(meal => {
+      const isSnack = meal.type === 'snack';
+      const tagClass = isSnack ? 'meal-time-tag snack' : 'meal-time-tag';
+      const componentsHTML = (meal.components || []).map(c => `
+        <div class="meal-component">
+          <div class="mc-label">${c.label}</div>
+          <div class="mc-value">${c.value}</div>
+          <div class="mc-portion">${c.portion}</div>
+        </div>`).join('');
+
+      const block = document.createElement('div');
+      block.className = 'meal-block';
+      block.style.animation = 'fadeInMeal 0.4s ease both';
+      block.innerHTML = `
+        <div class="meal-header">
+          <span class="${tagClass}">${meal.type.charAt(0).toUpperCase()+meal.type.slice(1)} · ${meal.time}</span>
+          <span class="meal-title">${meal.title}</span>
+          <span class="meal-kcal">${meal.kcal}</span>
+        </div>
+        <div class="meal-body">
+          ${componentsHTML}
+          <div class="meal-note">${meal.note}</div>
+        </div>`;
+      panel.appendChild(block);
+    });
+
+  } catch (e) {
+    // Restore on error
+    mealBlocks.forEach(b => { b.style.opacity = '1'; b.style.pointerEvents = ''; });
+    alert('Could not generate new meals. Please try again.');
+    console.error(e);
+  } finally {
+    clearInterval(spinInterval);
+    icon.style.transform = 'rotate(0deg)';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
 }
 
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeRecipe(); });
