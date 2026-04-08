@@ -1,3 +1,8 @@
+// ══════════════════════════════════════
+// CASPI GORILLA — script.js
+// ══════════════════════════════════════
+
+// ── RECIPES ──
 const RECIPES = {
   creami1: { cat:'Ninja Creami — Healthy Ice Cream', title:'Blueberry Protein Ice Cream', meta:[{label:'Prep',val:'5 min'},{label:'Freeze',val:'24 hrs'},{label:'Serves',val:'1'},{label:'Protein',val:'~35g'},{label:'Calories',val:'~280 kcal'},{label:'Diet',val:'Gluten-Free'}], ingredients:['1 cup (240ml) unsweetened almond milk','1 scoop vanilla protein powder (~30g)','½ cup (75g) fresh or frozen blueberries','2 tbsp Greek yogurt (0% fat)','1 tsp honey or maple syrup','½ tsp vanilla extract','Pinch of salt'], steps:['Add all ingredients to a blender and blend until completely smooth.','Pour the mixture into your Ninja Creami pint container, filling to the max fill line.','Place the lid on and freeze for a full 24 hours — no shortcuts here.','Remove from freezer, let sit at room temperature for 5 minutes.','Process on the LITE ICE CREAM setting.','If texture is crumbly after the first spin, add 1 tablespoon of almond milk and re-spin.','Serve immediately, topped with a few fresh blueberries if desired.'], tip:'Swap blueberries for strawberries or raspberries — any berry works beautifully. For extra creaminess, use 2% Greek yogurt instead of 0%.'},
   creami2: { cat:'Ninja Creami — Healthy Ice Cream', title:'Dark Chocolate Peanut Butter Gelato', meta:[{label:'Prep',val:'5 min'},{label:'Freeze',val:'24 hrs'},{label:'Serves',val:'1'},{label:'Protein',val:'~30g'},{label:'Calories',val:'~320 kcal'},{label:'Diet',val:'Gluten-Free'}], ingredients:['1 cup (240ml) unsweetened oat milk','1 scoop chocolate protein powder (~30g)','1 tbsp natural peanut butter (no added sugar)','1 tbsp unsweetened cocoa powder','1 tsp honey','½ tsp vanilla extract','Pinch of salt'], steps:['Whisk together oat milk, protein powder, cocoa powder, honey, vanilla, and salt until fully combined.','Add peanut butter and whisk again — small streaks are fine, they create a marble effect.','Pour into Ninja Creami pint container up to the max fill line.','Freeze for 24 hours with the lid on.','Rest at room temperature for 5 minutes before processing.','Process on the GELATO setting for a denser, creamier texture.','If needed, add 1 tbsp oat milk and re-spin once.'], tip:'For a mix-in, after the first spin create a hole in the center, add 1 tbsp of dark chocolate chips, and use the MIX-IN setting.'},
@@ -19,240 +24,26 @@ function openRecipe(id) {
 function closeRecipe() { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
 function closeModalOnBg(e) { if(e.target===document.getElementById('modal-overlay')) closeRecipe(); }
 
-// ══════════════════════════════════════
-// LANGUAGE / i18n SYSTEM
-// ══════════════════════════════════════
-let currentLang = 'en';
-
-const TRANSLATIONS = {
-  en: {
-    // Header
-    subtitle: 'Wellness · Recipes · Calculator',
-    // Tabs
-    tab_wellness: 'Wellness', tab_recipes: 'Recipes', tab_calculator: 'Calculator',
-    // Dietitian note
-    dietitian_title: 'Dietitian Plan — Gal · March 2026',
-    dietitian_body: 'Personal meal plan based on your clinical dietitian\'s guidelines. Carb counting protocol active. Max 1 fat serving per meal. Aerobic exercise 2–3×/week recommended.',
-    // Legend
-    leg_protein: 'PROTEIN', leg_carbs: 'CARBS', leg_fat: 'FAT', leg_veg: 'VEGETABLES',
-    // Days
-    day_sun: 'Sun', day_mon: 'Mon', day_tue: 'Tue', day_wed: 'Wed', day_thu: 'Thu', day_fri: 'Fri', day_sat: 'Sat',
-    // Meal labels
-    total_calories: 'Total Calories', protein: 'Protein', carbs: 'Carbs', fat: 'Fat',
-    kcal_day: 'kcal / day', grams: 'grams',
-    label_protein: 'Protein', label_carbs: 'Carbs', label_fat: 'Fat', label_veg: 'Vegetables', label_timing: 'Timing',
-    // Sunday meals
-    sun_b_tag: 'Breakfast · 07:30', sun_b_title: 'Greek Yogurt Bowl', sun_b_kcal: '~380 kcal',
-    sun_b_p: 'Greek yogurt 3%', sun_b_p_amt: '1 cup (200ml)', sun_b_c: 'Oats + banana slices', sun_b_c_amt: '3 tbsp oats + ½ banana', sun_b_v: 'Cherry tomatoes', sun_b_v_amt: 'Free amount',
-    sun_b_note: 'Add a drizzle of honey if desired. Keep fat to max 1 serving — skip butter/oil if having yogurt.',
-    sun_l_tag: 'Lunch · 13:00', sun_l_title: 'Grilled Chicken & Rice', sun_l_kcal: '~520 kcal',
-    sun_l_p: 'Grilled chicken breast', sun_l_p_amt: '175g', sun_l_c: 'White rice + green lentils mixed', sun_l_c_amt: '5 tbsp cooked', sun_l_v: 'Cucumber, tomato, parsley salad', sun_l_v_amt: 'Unlimited',
-    sun_l_note: 'Mix lentils into the rice — great way to add plant protein and slow the carb release. Season with olive oil (1 tsp only).',
-    sun_s_tag: 'Snack · 16:30', sun_s_title: 'Pre-Workout Fuel', sun_s_kcal: '~200 kcal',
-    sun_s_p: 'White yogurt', sun_s_p_amt: '1 cup', sun_s_c: 'Apple (medium)', sun_s_c_amt: '1 whole', sun_s_t: 'Eat 1.5h before workout',
-    sun_s_note: 'If craving something sweet: keep the yogurt as your protein base, then add 4 squares of dark chocolate instead of the apple.',
-    sun_d_tag: 'Dinner · 19:30', sun_d_title: 'Egg & Tuna Plate', sun_d_kcal: '~380 kcal',
-    sun_d_p: '2 eggs scrambled + ½ tin tuna in water', sun_d_p_amt: '2 eggs + 60g tuna', sun_d_c: 'Whole wheat pita', sun_d_c_amt: '1 small (½ pita)', sun_d_v: 'Sliced cucumbers, radish, green onion', sun_d_v_amt: 'Free amount',
-    sun_d_note: 'Add ½ cup cottage 5% on the side if still hungry. Max 1 fat serving — use a little olive oil for eggs only.',
-    // Calculator
-    calc_title: 'Nutrition Calculator', calc_personal: 'Personal Info', calc_age: 'Age (years)', calc_weight: 'Weight (kg)', calc_height: 'Height (cm)', calc_gender: 'Gender',
-    calc_male: 'Male', calc_female: 'Female', calc_activity: 'Activity Level',
-    act_sed: 'Sedentary', act_light: 'Light (1–2×/wk)', act_mod: 'Moderate (3–5×/wk)', act_active: 'Active (6–7×/wk)', act_very: 'Very Active',
-    calc_goal: 'Goal', goal_lose: 'Lose Weight', goal_maintain: 'Maintain', goal_gain: 'Gain Muscle',
-    calc_btn: 'Calculate My Macros →',
-    bmr_label: 'BMR (Base)', tdee_label: 'TDEE (Maintenance)', target_label: 'Target Calories',
-    res_kcal: 'Calories', res_protein: 'Protein', res_carbs: 'Carbs', res_fat: 'Fat',
-    kcal_day2: 'kcal / day', g_day: 'grams / day',
-    macro_split: 'Macro Split', per_meal: 'Per-Meal Breakdown', four_meals: '4 MEALS / DAY',
-    cal_meal: 'Calories / meal', prot_meal: 'Protein / meal', carb_meal: 'Carbs / meal', fat_meal: 'Fat / meal',
-    // Food log
-    food_log_title: 'Food Log', food_log_badge: 'AI-POWERED',
-    food_mode_type: '— TYPE', food_mode_photo: '📷 PHOTO',
-    food_desc_title: 'Describe what you ate',
-    food_desc_sub: 'Just write naturally — amounts, units, anything. The AI will parse it and estimate the macros.',
-    food_placeholder: 'e.g. 1 hamburger, 200g fries and 1 coke zero 500ml',
-    food_shortcut: 'Ctrl+Enter to submit', food_analyze_btn: 'Analyze with AI →',
-    food_photo_title: 'Take or upload a photo',
-    food_photo_sub: 'The AI will identify the food in the image and estimate the nutrition values automatically.',
-    food_tap: 'Tap to upload a photo', food_formats: 'JPG, PNG, HEIC supported',
-    food_camera: '📸 Camera', food_gallery: '🖼 Gallery',
-    food_analyze_photo: 'Analyze Photo with AI →',
-    food_item: 'Food Item', food_amount: 'Amount', food_kcal_col: 'Kcal',
-    food_total: 'TOTAL', food_clear: 'Clear All', food_add_more: '+ Add More',
-    // Footer
-    footer: 'Wellness · Recipes · Calculator',
-  },
-  he: {
-    subtitle: 'בריאות · מתכונים · מחשבון',
-    tab_wellness: 'בריאות', tab_recipes: 'מתכונים', tab_calculator: 'מחשבון',
-    dietitian_title: 'תפריט דיאטנית — גל · מרץ 2026',
-    dietitian_body: 'תפריט אישי על פי הנחיות הדיאטנית הקלינית שלך. פרוטוקול ספירת פחמימות פעיל. מקסימום מנת שומן אחת בכל ארוחה. מומלץ פעילות אירובית 2–3 פעמים בשבוע.',
-    leg_protein: 'חלבון', leg_carbs: 'פחמימות', leg_fat: 'שומן', leg_veg: 'ירקות',
-    day_sun: 'ראשון', day_mon: 'שני', day_tue: 'שלישי', day_wed: 'רביעי', day_thu: 'חמישי', day_fri: 'שישי', day_sat: 'שבת',
-    total_calories: 'סה״כ קלוריות', protein: 'חלבון', carbs: 'פחמימות', fat: 'שומן',
-    kcal_day: 'קק״ל / יום', grams: 'גרם',
-    label_protein: 'חלבון', label_carbs: 'פחמימות', label_fat: 'שומן', label_veg: 'ירקות', label_timing: 'תזמון',
-    sun_b_tag: 'בוקר · 07:30', sun_b_title: 'קערת יוגורט יווני', sun_b_kcal: '~380 קק״ל',
-    sun_b_p: 'יוגורט יווני 3%', sun_b_p_amt: 'כוס אחת (200 מ"ל)', sun_b_c: 'שיבולת שועל + פרוסות בננה', sun_b_c_amt: '3 כפות שיבולת + ½ בננה', sun_b_v: 'עגבניות שרי', sun_b_v_amt: 'כמות חופשית',
-    sun_b_note: 'אפשר להוסיף מעט דבש. מקסימום מנת שומן אחת — אל תוסיף חמאה/שמן אם אוכל יוגורט.',
-    sun_l_tag: 'צהריים · 13:00', sun_l_title: 'חזה עוף על האש עם אורז', sun_l_kcal: '~520 קק״ל',
-    sun_l_p: 'חזה עוף על האש', sun_l_p_amt: '175 גרם', sun_l_c: 'אורז לבן + עדשים ירוקות מעורבב', sun_l_c_amt: '5 כפות מבושל', sun_l_v: 'סלט מלפפון, עגבניה ופטרוזיליה', sun_l_v_amt: 'ללא הגבלה',
-    sun_l_note: 'ערבב עדשים לתוך האורז — דרך מצוינת להוסיף חלבון צמחי ולהאט את ספיגת הפחמימות. תבל בשמן זית (כפית בלבד).',
-    sun_s_tag: 'ביניים · 16:30', sun_s_title: 'דלק לאימון', sun_s_kcal: '~200 קק״ל',
-    sun_s_p: 'יוגורט לבן', sun_s_p_amt: 'כוס אחת', sun_s_c: 'תפוח (בינוני)', sun_s_c_amt: '1 שלם', sun_s_t: 'לאכול שעה וחצי לפני האימון',
-    sun_s_note: 'אם חושק במשהו מתוק: שמור את היוגורט כבסיס החלבוני, והוסף 4 קוביות שוקולד מריר במקום התפוח.',
-    sun_d_tag: 'ערב · 19:30', sun_d_title: 'צלחת ביצים וטונה', sun_d_kcal: '~380 קק״ל',
-    sun_d_p: '2 ביצים מקושקשות + ½ פחית טונה במים', sun_d_p_amt: '2 ביצים + 60 גרם טונה', sun_d_c: 'פיתה מחיטה מלאה', sun_d_c_amt: '1 קטנה (½ פיתה)', sun_d_v: 'מלפפון פרוס, צנון, בצל ירוק', sun_d_v_amt: 'כמות חופשית',
-    sun_d_note: 'הוסף ½ כוס קוטג׳ 5% בצד אם עדיין רעב. מקסימום מנת שומן אחת — שמן זית קצת בלבד לביצים.',
-    calc_title: 'מחשבון תזונה', calc_personal: 'פרטים אישיים', calc_age: 'גיל (שנים)', calc_weight: 'משקל (ק"ג)', calc_height: 'גובה (ס"מ)', calc_gender: 'מין',
-    calc_male: 'זכר', calc_female: 'נקבה', calc_activity: 'רמת פעילות',
-    act_sed: 'יושבני', act_light: 'קלה (1–2×/שבוע)', act_mod: 'בינונית (3–5×/שבוע)', act_active: 'פעיל (6–7×/שבוע)', act_very: 'פעיל מאוד',
-    calc_goal: 'מטרה', goal_lose: 'ירידה במשקל', goal_maintain: 'שמירה', goal_gain: 'עלייה בשריר',
-    calc_btn: 'חשב את המקרו שלי →',
-    bmr_label: 'BMR (בסיסי)', tdee_label: 'TDEE (תחזוקה)', target_label: 'קלוריות מטרה',
-    res_kcal: 'קלוריות', res_protein: 'חלבון', res_carbs: 'פחמימות', res_fat: 'שומן',
-    kcal_day2: 'קק״ל / יום', g_day: 'גרם / יום',
-    macro_split: 'פיצול מקרו', per_meal: 'פירוט לפי ארוחה', four_meals: '4 ארוחות / יום',
-    cal_meal: 'קלוריות / ארוחה', prot_meal: 'חלבון / ארוחה', carb_meal: 'פחמימות / ארוחה', fat_meal: 'שומן / ארוחה',
-    food_log_title: 'יומן אכילה', food_log_badge: 'מבוסס AI',
-    food_mode_type: '— הקלד', food_mode_photo: '📷 תמונה',
-    food_desc_title: 'תאר מה אכלת',
-    food_desc_sub: 'כתוב בחופשיות — כמויות, יחידות, הכל. ה-AI יפרש ויחשב את הערכים.',
-    food_placeholder: 'לדוגמה: המבורגר אחד, 200 גרם צ׳יפס וקולה זירו 500 מ"ל',
-    food_shortcut: 'Ctrl+Enter לשליחה', food_analyze_btn: 'ניתוח עם AI →',
-    food_photo_title: 'צלם או העלה תמונה',
-    food_photo_sub: 'ה-AI יזהה את המזון בתמונה ויחשב את הערכים התזונתיים אוטומטית.',
-    food_tap: 'לחץ להעלאת תמונה', food_formats: 'JPG, PNG, HEIC נתמכים',
-    food_camera: '📸 מצלמה', food_gallery: '🖼 גלריה',
-    food_analyze_photo: 'ניתוח תמונה עם AI →',
-    food_item: 'מזון', food_amount: 'כמות', food_kcal_col: 'קק״ל',
-    food_total: 'סה״כ', food_clear: 'נקה הכל', food_add_more: '+ הוסף עוד',
-    footer: 'בריאות · מתכונים · מחשבון',
-  }
-};
-
-function toggleLang() {
-  currentLang = currentLang === 'en' ? 'he' : 'en';
-  const html = document.documentElement;
-  html.lang = currentLang;
-  html.dir = currentLang === 'he' ? 'rtl' : 'ltr';
-  document.getElementById('lang-btn').textContent = currentLang === 'he' ? 'EN / עב' : 'עב / EN';
-  applyTranslations();
+// ── TAB & DAY SWITCHING ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
 }
 
-function t(key) {
-  return TRANSLATIONS[currentLang][key] || TRANSLATIONS['en'][key] || key;
+function switchDay(name, btn) {
+  document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('day-'+name).classList.add('active');
+  btn.classList.add('active');
 }
 
-function applyTranslations() {
-  const L = currentLang;
-  // Header subtitle
-  document.querySelector('[data-en="Wellness · Recipes · Calculator"]').textContent = t('subtitle');
-  // Tabs
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    const key = 'tab_' + btn.getAttribute('onclick').match(/'(\w+)'/)[1];
-    btn.textContent = t(key);
-  });
-  // Dietitian note
-  const dn = document.querySelector('.dn-text');
-  if (dn) {
-    dn.innerHTML = `<strong>${t('dietitian_title')}</strong>${t('dietitian_body')}`;
-  }
-  // Legend
-  const legends = document.querySelectorAll('.legend-item');
-  const legKeys = ['leg_protein','leg_carbs','leg_fat','leg_veg'];
-  legends.forEach((el, i) => {
-    const dot = el.querySelector('.legend-dot');
-    el.textContent = t(legKeys[i]);
-    el.prepend(dot);
-  });
-  // Day buttons
-  const days = ['sun','mon','tue','wed','thu','fri','sat'];
-  document.querySelectorAll('.day-btn').forEach((btn, i) => {
-    btn.textContent = t('day_' + days[i]);
-  });
-  // Day totals labels
-  document.querySelectorAll('.dt-label').forEach(el => {
-    const txt = el.textContent.trim();
-    if (txt === 'Total Calories' || txt === 'סה״כ קלוריות') el.textContent = t('total_calories');
-    if (txt === 'Protein' || txt === 'חלבון') el.textContent = t('protein');
-    if (txt === 'Carbs' || txt === 'פחמימות') el.textContent = t('carbs');
-    if (txt === 'Fat' || txt === 'שומן') el.textContent = t('fat');
-  });
-  document.querySelectorAll('.dt-unit').forEach(el => {
-    if (el.textContent.includes('kcal') || el.textContent.includes('קק')) el.textContent = t('kcal_day');
-    if (el.textContent === 'grams' || el.textContent === 'גרם') el.textContent = t('grams');
-  });
-  // Meal component labels
-  document.querySelectorAll('.mc-label').forEach(el => {
-    const txt = el.textContent.trim();
-    if (txt === 'Protein' || txt === 'חלבון') el.textContent = t('label_protein');
-    else if (txt === 'Carbs' || txt === 'פחמימות') el.textContent = t('label_carbs');
-    else if (txt === 'Fat' || txt === 'שומן') el.textContent = t('label_fat');
-    else if (txt === 'Vegetables' || txt === 'ירקות') el.textContent = t('label_veg');
-    else if (txt === 'Timing' || txt === 'תזמון') el.textContent = t('label_timing');
-  });
-  // Sunday meals specifically
-  const sunKeys = [
-    ['sun_b_tag','sun_b_title','sun_b_kcal','sun_b_p','sun_b_p_amt','sun_b_c','sun_b_c_amt','sun_b_v','sun_b_v_amt','sun_b_note'],
-    ['sun_l_tag','sun_l_title','sun_l_kcal','sun_l_p','sun_l_p_amt','sun_l_c','sun_l_c_amt','sun_l_v','sun_l_v_amt','sun_l_note'],
-    ['sun_s_tag','sun_s_title','sun_s_kcal','sun_s_p','sun_s_p_amt','sun_s_c','sun_s_c_amt','sun_s_t','—','sun_s_note'],
-    ['sun_d_tag','sun_d_title','sun_d_kcal','sun_d_p','sun_d_p_amt','sun_d_c','sun_d_c_amt','sun_d_v','sun_d_v_amt','sun_d_note'],
-  ];
-  const sunPanel = document.getElementById('day-sun');
-  if (sunPanel) {
-    const blocks = sunPanel.querySelectorAll('.meal-block');
-    blocks.forEach((block, bi) => {
-      const keys = sunKeys[bi];
-      const tag = block.querySelector('.meal-time-tag'); if (tag) tag.textContent = t(keys[0]);
-      const title = block.querySelector('.meal-title'); if (title) title.textContent = t(keys[1]);
-      const kcal = block.querySelector('.meal-kcal'); if (kcal) kcal.textContent = t(keys[2]);
-      const comps = block.querySelectorAll('.meal-component');
-      if (comps[0]) { comps[0].querySelector('.mc-value').textContent = t(keys[3]); comps[0].querySelector('.mc-portion').textContent = t(keys[4]); }
-      if (comps[1]) { comps[1].querySelector('.mc-value').textContent = t(keys[5]); comps[1].querySelector('.mc-portion').textContent = t(keys[6]); }
-      if (comps[2]) { comps[2].querySelector('.mc-value').textContent = t(keys[7]); comps[2].querySelector('.mc-portion').textContent = t(keys[8]); }
-      const note = block.querySelector('.meal-note'); if (note) note.textContent = t(keys[9]);
-    });
-  }
-  // Calculator
-  translateEl('[data-i18n="calc_title"]', 'calc_title');
-  // Food log
-  translateEl('[data-i18n="food_log_title"]', 'food_log_title');
-  translateEl('[data-i18n="food_log_badge"]', 'food_log_badge');
-  translateEl('[data-i18n="food_desc_title"]', 'food_desc_title');
-  translateEl('[data-i18n="food_desc_sub"]', 'food_desc_sub');
-  translateAttr('[data-i18n-ph="food_placeholder"]', 'placeholder', 'food_placeholder');
-  translateEl('[data-i18n="food_shortcut"]', 'food_shortcut');
-  translateEl('[data-i18n="food_analyze_btn"]', 'food_analyze_btn');
-  translateEl('[data-i18n="food_photo_title"]', 'food_photo_title');
-  translateEl('[data-i18n="food_photo_sub"]', 'food_photo_sub');
-  translateEl('[data-i18n="food_tap"]', 'food_tap');
-  translateEl('[data-i18n="food_formats"]', 'food_formats');
-  translateEl('[data-i18n="food_camera"]', 'food_camera');
-  translateEl('[data-i18n="food_gallery"]', 'food_gallery');
-  translateEl('[data-i18n="food_analyze_photo"]', 'food_analyze_photo');
-  translateEl('[data-i18n="food_total"]', 'food_total');
-  translateEl('[data-i18n="food_clear"]', 'food_clear');
-  translateEl('[data-i18n="food_add_more"]', 'food_add_more');
-  // Footer
-  const footer = document.querySelector('footer');
-  if (footer) footer.innerHTML = `<span>CASPI GORILLA</span> — ${t('footer')} · © 2026`;
-}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeRecipe(); });
 
-function translateEl(selector, key) {
-  const el = document.querySelector(selector);
-  if (el) el.textContent = t(key);
-}
-
-function translateAttr(selector, attr, key) {
-  const el = document.querySelector(selector);
-  if (el) el[attr] = t(key);
-}
-
-// ── FOOD LOG STATE ──
+// ── FOOD LOG ──
 let foodLog = [];
 
-// ── FOOD LOG MODE TOGGLE ──
 function setMode(mode) {
   const isPhoto = mode === 'photo';
   document.getElementById('mode-text').style.display = isPhoto ? 'none' : 'block';
@@ -264,18 +55,13 @@ function setMode(mode) {
   setStatus('', '');
 }
 
-// ── PHOTO HANDLING ──
 let currentPhotoBase64 = null;
 let currentPhotoMediaType = 'image/jpeg';
 
 function onPhotoSelected(event) {
   const file = event.target.files[0];
   if (!file) return;
-
-  // Detect media type
   currentPhotoMediaType = file.type || 'image/jpeg';
-
-  // Compress image via canvas before sending (max 1000px wide, quality 0.75)
   const reader = new FileReader();
   reader.onload = (e) => {
     const img = new Image();
@@ -285,11 +71,10 @@ function onPhotoSelected(event) {
       let w = img.width, h = img.height;
       if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
       canvas.width = w; canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, w, h);
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
       const compressed = canvas.toDataURL('image/jpeg', 0.75);
       currentPhotoBase64 = compressed.split(',')[1];
-      currentPhotoMediaType = 'image/jpeg'; // canvas always outputs JPEG
+      currentPhotoMediaType = 'image/jpeg';
       document.getElementById('photo-preview').src = compressed;
       document.getElementById('photo-preview-wrap').style.display = 'block';
       document.getElementById('photo-drop-area').style.display = 'none';
@@ -309,96 +94,69 @@ function clearPhoto() {
   setStatus('', '');
 }
 
-async function analyzePhoto() {
-  if (!currentPhotoBase64) {
-    setStatus('Please take or upload a photo first.', '#e24b4a');
-    return;
-  }
-  const btn = document.querySelector('[onclick="analyzePhoto()"]');
-  btn.textContent = 'Analyzing...';
-  btn.disabled = true;
-  setStatus('<span style="opacity:0.6;">AI is identifying the food in your photo...</span>', 'var(--text-muted)');
+function setStatus(msg, color) {
+  const el = document.getElementById('food-ai-status');
+  if (!el) return;
+  el.style.color = color || 'var(--text-muted)';
+  el.innerHTML = msg;
+}
 
+async function analyzePhoto() {
+  if (!currentPhotoBase64) { setStatus('Please take or upload a photo first.', '#e24b4a'); return; }
+  const btn = document.querySelector('[onclick="analyzePhoto()"]');
+  btn.textContent = 'Analyzing...'; btn.disabled = true;
+  setStatus('<span style="opacity:0.6;">AI is identifying the food in your photo...</span>', 'var(--text-muted)');
   try {
     const response = await fetch('/.netlify/functions/analyze-food', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ photo: currentPhotoBase64, mediaType: currentPhotoMediaType })
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Function error');
     const items = data.items;
     if (!Array.isArray(items) || items.length === 0) throw new Error('No food detected in image');
-
     items.forEach(item => { foodLog.push({ id: Date.now() + Math.random(), ...item }); });
-    renderLog();
-    clearPhoto();
+    renderLog(); clearPhoto();
     setStatus('✓ ' + items.length + ' item' + (items.length > 1 ? 's' : '') + ' identified and added to log.', 'var(--green)');
   } catch (e) {
-    setStatus('✕ ' + (e.message || 'Something went wrong. Try again.'), '#e24b4a');
-    console.error(e);
+    setStatus('✕ ' + (e.message || 'Something went wrong.'), '#e24b4a');
   } finally {
-    btn.textContent = 'Analyze Photo with AI →';
-    btn.disabled = false;
+    btn.textContent = 'Analyze Photo with AI →'; btn.disabled = false;
   }
-}
-
-
-
-function setStatus(msg, color) {
-  const el = document.getElementById('food-ai-status');
-  el.style.color = color || 'var(--text-muted)';
-  el.innerHTML = msg;
 }
 
 async function analyzeFood() {
   const text = document.getElementById('food-text-input').value.trim();
   if (!text) { setStatus('Please describe what you ate first.', '#e24b4a'); return; }
-
   const btn = document.querySelector('[onclick="analyzeFood()"]');
-  btn.textContent = 'Analyzing...';
-  btn.disabled = true;
+  btn.textContent = 'Analyzing...'; btn.disabled = true;
   setStatus('<span style="opacity:0.6;">Asking AI to estimate nutrition values...</span>', 'var(--text-muted)');
-
   try {
     const response = await fetch('/.netlify/functions/analyze-food', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text })
     });
-
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Function error');
     const items = data.items;
-
     if (!Array.isArray(items) || items.length === 0) throw new Error('Empty result');
-
-    items.forEach(item => {
-      foodLog.push({ id: Date.now() + Math.random(), ...item });
-    });
-
+    items.forEach(item => { foodLog.push({ id: Date.now() + Math.random(), ...item }); });
     renderLog();
     document.getElementById('food-text-input').value = '';
     setStatus('✓ ' + items.length + ' item' + (items.length > 1 ? 's' : '') + ' added to log.', 'var(--green)');
-
   } catch (e) {
-    setStatus('✕ Error: ' + (e.message || 'Unknown error'), '#e24b4a');
-    console.error(e);
+    setStatus('✕ ' + (e.message || 'Unknown error'), '#e24b4a');
   } finally {
-    btn.textContent = 'Analyze with AI →';
-    btn.disabled = false;
+    btn.textContent = 'Analyze with AI →'; btn.disabled = false;
   }
 }
 
 function addMore() {
   document.getElementById('food-text-input').focus();
-  document.getElementById('food-text-input').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  document.getElementById('food-text-input').scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
-function removeItem(id) {
-  foodLog = foodLog.filter(i => i.id !== id);
-  renderLog();
-}
+function removeItem(id) { foodLog = foodLog.filter(i => i.id !== id); renderLog(); }
 
 function renderLog() {
   const tbody = document.getElementById('food-table-body');
@@ -411,30 +169,19 @@ function renderLog() {
       <td class="food-col-carbs" style="text-align:right; padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text);">${item.carbs}g</td>
       <td class="food-col-fat" style="text-align:right; padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text);">${item.fat}g</td>
       <td style="padding:11px 10px; text-align:center;">
-        <button onclick="removeItem(${item.id})" style="font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text-muted); background:none; border:none; cursor:pointer; padding:4px 8px; border-radius:2px; min-width:32px; min-height:32px;" onmouseover="this.style.color='#e24b4a'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
+        <button onclick="removeItem(${item.id})" style="font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text-muted); background:none; border:none; cursor:pointer; padding:4px 8px;" onmouseover="this.style.color='#e24b4a'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
       </td>
-    </tr>
-  `).join('');
-
-  const totKcal  = foodLog.reduce((s,i) => s + (i.kcal || 0), 0);
-  const totProt  = Math.round(foodLog.reduce((s,i) => s + (i.protein || 0), 0) * 10) / 10;
-  const totCarbs = Math.round(foodLog.reduce((s,i) => s + (i.carbs   || 0), 0) * 10) / 10;
-  const totFat   = Math.round(foodLog.reduce((s,i) => s + (i.fat     || 0), 0) * 10) / 10;
-
-  document.getElementById('total-kcal').textContent    = totKcal + ' kcal';
-  document.getElementById('total-protein').textContent = totProt + 'g';
-  document.getElementById('total-carbs').textContent   = totCarbs + 'g';
-  document.getElementById('total-fat').textContent     = totFat + 'g';
-
+    </tr>`).join('');
+  document.getElementById('total-kcal').textContent    = foodLog.reduce((s,i)=>s+(i.kcal||0),0) + ' kcal';
+  document.getElementById('total-protein').textContent = (Math.round(foodLog.reduce((s,i)=>s+(i.protein||0),0)*10)/10) + 'g';
+  document.getElementById('total-carbs').textContent   = (Math.round(foodLog.reduce((s,i)=>s+(i.carbs||0),0)*10)/10) + 'g';
+  document.getElementById('total-fat').textContent     = (Math.round(foodLog.reduce((s,i)=>s+(i.fat||0),0)*10)/10) + 'g';
   document.getElementById('food-log-section').style.display = foodLog.length ? 'block' : 'none';
 }
 
-function clearLog() {
-  foodLog = [];
-  renderLog();
-  setStatus('', '');
-}
+function clearLog() { foodLog = []; renderLog(); setStatus('',''); }
 
+// ── CALCULATOR ──
 function calculate() {
   const age    = parseFloat(document.getElementById('calc-age').value);
   const weight = parseFloat(document.getElementById('calc-weight').value);
@@ -442,58 +189,31 @@ function calculate() {
   const gender = document.getElementById('calc-gender').value;
   const activity = parseFloat(document.querySelector('input[name="activity"]:checked').value);
   const goal   = document.querySelector('input[name="goal"]:checked').value;
-
   if (!age || !weight || !height || isNaN(age) || isNaN(weight) || isNaN(height)) {
-    alert('Please fill in all fields (age, weight, height) before calculating.');
-    return;
+    alert('Please fill in all fields (age, weight, height) before calculating.'); return;
   }
-
-  // Mifflin-St Jeor BMR
-  let bmr;
-  if (gender === 'male') {
-    bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-  } else {
-    bmr = 10 * weight + 6.25 * height - 5 * age - 161;
-  }
-
+  const bmr = gender === 'male'
+    ? 10*weight + 6.25*height - 5*age + 5
+    : 10*weight + 6.25*height - 5*age - 161;
   const tdee = bmr * activity;
-
-  // Adjust for goal
-  let targetKcal;
-  let proteinMultiplier;
-  let carbPct, fatPct, proteinPct;
-  let tipText;
-
+  let targetKcal, proteinMultiplier, carbPct, fatPct, tipText;
   if (goal === 'lose') {
-    targetKcal = tdee - 400;
-    proteinMultiplier = 2.2; // higher protein to preserve muscle
-    proteinPct = 35; carbPct = 40; fatPct = 25;
-    tipText = 'For fat loss, you\'re eating ~400 kcal below your TDEE. Protein is set high (2.2g/kg) to protect muscle mass. Keep carbs around workouts and stay consistent with your deficit.';
+    targetKcal=tdee-400; proteinMultiplier=2.2; carbPct=40; fatPct=25;
+    tipText='For fat loss, you\'re eating ~400 kcal below your TDEE. Protein is set high (2.2g/kg) to protect muscle mass.';
   } else if (goal === 'gain') {
-    targetKcal = tdee + 300;
-    proteinMultiplier = 2.0;
-    proteinPct = 30; carbPct = 45; fatPct = 25;
-    tipText = 'For muscle gain, you\'re eating ~300 kcal above TDEE (lean bulk). Protein at 2.0g/kg supports hypertrophy. Prioritize carbs around your training sessions for optimal performance.';
+    targetKcal=tdee+300; proteinMultiplier=2.0; carbPct=45; fatPct=25;
+    tipText='For muscle gain, you\'re eating ~300 kcal above TDEE (lean bulk). Protein at 2.0g/kg supports hypertrophy.';
   } else {
-    targetKcal = tdee;
-    proteinMultiplier = 1.8;
-    proteinPct = 30; carbPct = 42; fatPct = 28;
-    tipText = 'Maintenance mode — eating at your TDEE. Great for body recomposition with consistent training. This balance supports energy, recovery, and overall health.';
+    targetKcal=tdee; proteinMultiplier=1.8; carbPct=42; fatPct=28;
+    tipText='Maintenance mode — eating at your TDEE. Great for body recomposition with consistent training.';
   }
-
   const proteinG = Math.round(weight * proteinMultiplier);
-  const proteinKcal = proteinG * 4;
-  const fatKcal = (targetKcal * fatPct) / 100;
-  const fatG = Math.round(fatKcal / 9);
-  const carbKcal = targetKcal - proteinKcal - fatKcal;
-  const carbG = Math.round(carbKcal / 4);
-
-  const totalMacroKcal = proteinG * 4 + fatG * 9 + carbG * 4;
-  const realProteinPct = Math.round((proteinG * 4 / totalMacroKcal) * 100);
-  const realCarbPct    = Math.round((carbG * 4 / totalMacroKcal) * 100);
-  const realFatPct     = Math.round((fatG * 9 / totalMacroKcal) * 100);
-
-  // Render
+  const fatG     = Math.round((targetKcal * fatPct / 100) / 9);
+  const carbG    = Math.round((targetKcal - proteinG*4 - fatG*9) / 4);
+  const total    = proteinG*4 + fatG*9 + carbG*4;
+  const pPct = Math.round(proteinG*4/total*100);
+  const cPct = Math.round(carbG*4/total*100);
+  const fPct = Math.round(fatG*9/total*100);
   document.getElementById('res-bmr').textContent    = Math.round(bmr) + ' kcal';
   document.getElementById('res-tdee').textContent   = Math.round(tdee) + ' kcal';
   document.getElementById('res-target').textContent = Math.round(targetKcal) + ' kcal';
@@ -501,87 +221,271 @@ function calculate() {
   document.getElementById('res-protein').textContent = proteinG + 'g';
   document.getElementById('res-carbs').textContent   = carbG + 'g';
   document.getElementById('res-fat').textContent     = fatG + 'g';
-
-  document.getElementById('bar-protein').style.width = realProteinPct + '%';
-  document.getElementById('bar-carbs').style.width   = realCarbPct + '%';
-  document.getElementById('bar-fat').style.width     = realFatPct + '%';
-  document.getElementById('pct-protein').textContent = realProteinPct + '%';
-  document.getElementById('pct-carbs').textContent   = realCarbPct + '%';
-  document.getElementById('pct-fat').textContent     = realFatPct + '%';
-
+  document.getElementById('bar-protein').style.width = pPct + '%';
+  document.getElementById('bar-carbs').style.width   = cPct + '%';
+  document.getElementById('bar-fat').style.width     = fPct + '%';
+  document.getElementById('pct-protein').textContent = pPct + '%';
+  document.getElementById('pct-carbs').textContent   = cPct + '%';
+  document.getElementById('pct-fat').textContent     = fPct + '%';
   document.getElementById('goal-tip-text').textContent = tipText;
-
-  const meals = 4;
   document.getElementById('per-meal-fields').innerHTML = `
-    <div><div class="f-label">Calories / meal</div><div class="f-val">${Math.round(targetKcal / meals)} kcal</div></div>
-    <div><div class="f-label">Protein / meal</div><div class="f-val">${Math.round(proteinG / meals)}g</div></div>
-    <div><div class="f-label">Carbs / meal</div><div class="f-val">${Math.round(carbG / meals)}g</div></div>
-    <div><div class="f-label">Fat / meal</div><div class="f-val">${Math.round(fatG / meals)}g</div></div>
-  `;
-
+    <div><div class="f-label">Calories / meal</div><div class="f-val">${Math.round(targetKcal/4)} kcal</div></div>
+    <div><div class="f-label">Protein / meal</div><div class="f-val">${Math.round(proteinG/4)}g</div></div>
+    <div><div class="f-label">Carbs / meal</div><div class="f-val">${Math.round(carbG/4)}g</div></div>
+    <div><div class="f-label">Fat / meal</div><div class="f-val">${Math.round(fatG/4)}g</div></div>`;
   document.getElementById('calc-results').classList.add('visible');
   document.getElementById('calc-results').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-function switchTab(name, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  btn.classList.add('active');
-}
+// ══════════════════════════════════════
+// LANGUAGE / i18n
+// ══════════════════════════════════════
+const I18N = {
+  en: {
+    subtitle:'Wellness · Recipes · Calculator',
+    tab_wellness:'Wellness', tab_recipes:'Recipes', tab_calculator:'Calculator',
+    dietitian_title:'Dietitian Plan — Gal · March 2026',
+    dietitian_body:'Personal meal plan based on your clinical dietitian\'s guidelines. Carb counting protocol active. Max 1 fat serving per meal. Aerobic exercise 2–3×/week recommended.',
+    legend_protein:'PROTEIN', legend_carbs:'CARBS', legend_fat:'FAT', legend_veg:'VEGETABLES',
+    day_sun:'Sun', day_mon:'Mon', day_tue:'Tue', day_wed:'Wed', day_thu:'Thu', day_fri:'Fri', day_sat:'Sat',
+    total_calories:'Total Calories', total_protein:'Protein', total_carbs:'Carbs', total_fat:'Fat',
+    kcal_day:'kcal / day', grams:'grams',
+    label_protein:'Protein', label_carbs:'Carbs', label_fat:'Fat', label_vegetables:'Vegetables', label_timing:'Timing',
+    sun_b_tag:'Breakfast · 07:30', sun_b_title:'Greek Yogurt Bowl', sun_b_kcal:'~380 kcal',
+    sun_b_p_val:'Greek yogurt 3%', sun_b_p_port:'1 cup (200ml)', sun_b_c_val:'Oats + banana slices', sun_b_c_port:'3 tbsp oats + ½ banana', sun_b_v_val:'Cherry tomatoes', sun_b_v_port:'Free amount',
+    sun_b_note:'Add a drizzle of honey if desired. Keep fat to max 1 serving — skip butter/oil if having yogurt.',
+    sun_l_tag:'Lunch · 13:00', sun_l_title:'Grilled Chicken & Rice', sun_l_kcal:'~520 kcal',
+    sun_l_p_val:'Grilled chicken breast', sun_l_p_port:'175g', sun_l_c_val:'White rice + green lentils mixed', sun_l_c_port:'5 tbsp cooked', sun_l_v_val:'Cucumber, tomato, parsley salad', sun_l_v_port:'Unlimited',
+    sun_l_note:'Mix lentils into the rice — great way to add plant protein and slow the carb release. Season with olive oil (1 tsp only).',
+    sun_s_tag:'Snack · 16:30', sun_s_title:'Pre-Workout Fuel', sun_s_kcal:'~200 kcal',
+    sun_s_p_val:'White yogurt', sun_s_p_port:'1 cup', sun_s_c_val:'Apple (medium)', sun_s_c_port:'1 whole', sun_s_t_val:'Eat 1.5h before workout',
+    sun_s_note:'If craving something sweet: keep the yogurt as your protein base, then add 4 squares of dark chocolate instead of the apple.',
+    sun_d_tag:'Dinner · 19:30', sun_d_title:'Egg & Tuna Plate', sun_d_kcal:'~380 kcal',
+    sun_d_p_val:'2 eggs scrambled + ½ tin tuna in water', sun_d_p_port:'2 eggs + 60g tuna', sun_d_c_val:'Whole wheat pita', sun_d_c_port:'1 small (½ pita)', sun_d_v_val:'Sliced cucumbers, radish, green onion', sun_d_v_port:'Free amount',
+    sun_d_note:'Add ½ cup cottage 5% on the side if still hungry. Max 1 fat serving — use a little olive oil for eggs only.',
+    mon_b_tag:'Breakfast · 07:30', mon_b_title:'Omelette & Whole Bread', mon_b_kcal:'~360 kcal',
+    mon_b_p_val:'2-egg omelette', mon_b_p_port:'2 large eggs', mon_b_c_val:'Whole wheat bread', mon_b_c_port:'1 slice (30g)', mon_b_v_val:'Tomato, cucumber, herbs', mon_b_v_port:'Free amount',
+    mon_b_note:'Cook the omelette with ½ tsp olive oil only. You can add a slice of white cheese inside the omelette for extra protein.',
+    mon_l_tag:'Lunch · 13:00', mon_l_title:'Turkey Patties & Bulgur', mon_l_kcal:'~510 kcal',
+    mon_l_p_val:'Turkey patties (homemade)', mon_l_p_port:'175g', mon_l_c_val:'Bulgur + chickpeas mixed', mon_l_c_port:'5 tbsp cooked', mon_l_v_val:'Roasted zucchini & eggplant', mon_l_v_port:'Unlimited',
+    mon_l_note:'Mixing chickpeas into bulgur adds fiber and protein. Season with cumin and lemon.',
+    mon_s_tag:'Snack · 16:30', mon_s_title:'Bread & Spread', mon_s_kcal:'~190 kcal',
+    mon_s_c_val:'Whole wheat bread', mon_s_c_port:'1 slice', mon_s_pf_val:'Cottage 5% or peanut butter + honey', mon_s_pf_port:'2 tbsp cottage or 1 tsp PB', mon_s_t_val:'1.5h before workout',
+    mon_s_note:'Peanut butter counts as your fat serving. Don\'t add extra fat elsewhere in this snack.',
+    mon_d_tag:'Dinner · 19:30', mon_d_title:'Cottage & Vegetable Plate', mon_d_kcal:'~350 kcal',
+    mon_d_p_val:'Cottage 5% + 1 egg soft boiled', mon_d_p_port:'½ cup + 1 egg', mon_d_c_val:'2 whole grain crackers (large)', mon_d_c_port:'2 crackers', mon_d_v_val:'Large mixed salad', mon_d_v_port:'Free amount',
+    mon_d_note:'Light dinner. Add 5 natural walnuts as your fat serving if still hungry after the salad.',
+    tue_b_tag:'Breakfast · 07:30', tue_b_title:'Cottage Bowl with Granola', tue_b_kcal:'~370 kcal',
+    tue_b_p_val:'Cottage 5%', tue_b_p_port:'½ cup (100g)', tue_b_c_val:'Homemade granola', tue_b_c_port:'3 tbsp', tue_b_vf_val:'Cucumber + seasonal berries', tue_b_vf_port:'Free veg + ½ cup berries',
+    tue_b_note:'Prefer homemade granola — store-bought often has hidden sugar and fat.',
+    tue_l_tag:'Lunch · 13:00', tue_l_title:'Salmon & Quinoa', tue_l_kcal:'~540 kcal',
+    tue_l_p_val:'Baked salmon fillet', tue_l_p_port:'175g', tue_l_c_val:'Quinoa + edamame', tue_l_c_port:'5 tbsp cooked quinoa', tue_l_v_val:'Steamed broccoli & cherry tomatoes', tue_l_v_port:'Unlimited',
+    tue_l_note:'Salmon already has healthy fat — skip extra olive oil.',
+    tue_s_tag:'Snack · 16:30', tue_s_title:'Fruit & Nuts', tue_s_kcal:'~180 kcal',
+    tue_s_cf_val:'Pear or peach', tue_s_cf_port:'1 medium', tue_s_f_val:'Natural almonds', tue_s_f_port:'5 units', tue_s_t_val:'1.5h before workout',
+    tue_s_note:'Simple and clean. Perfect pre-workout combo.',
+    tue_d_tag:'Dinner · 19:30', tue_d_title:'Shakshuka Light', tue_d_kcal:'~360 kcal',
+    tue_d_p_val:'2 eggs in tomato sauce', tue_d_p_port:'2 large eggs', tue_d_c_val:'Whole wheat pita', tue_d_c_port:'½ pita (small)', tue_d_v_val:'Tomato base + peppers + spinach', tue_d_v_port:'Unlimited in sauce',
+    tue_d_note:'Make the sauce with minimal oil (½ tsp). Add ½ cup cottage on the side.',
+    wed_b_tag:'Breakfast · 07:30', wed_b_title:'Oats & White Cheese Bowl', wed_b_kcal:'~360 kcal',
+    wed_b_p_val:'White cheese (labneh style)', wed_b_p_port:'½ cup', wed_b_c_val:'Rolled oats (cooked)', wed_b_c_port:'3 tbsp dry = 6 tbsp cooked', wed_b_v_val:'Radish, mint, cucumber', wed_b_v_port:'Free amount',
+    wed_b_note:'Savory oat bowl — unusual but very satisfying. Add za\'atar and olive oil (1 tsp).',
+    wed_l_tag:'Lunch · 13:00', wed_l_title:'Beef Meatballs & Pasta', wed_l_kcal:'~530 kcal',
+    wed_l_p_val:'Lean beef meatballs (baked)', wed_l_p_port:'175g', wed_l_c_val:'Whole wheat pasta + red lentils', wed_l_c_port:'5 tbsp cooked pasta', wed_l_v_val:'Tomato sauce + green salad', wed_l_v_port:'Unlimited',
+    wed_l_note:'Bake meatballs — no frying. Mix a handful of cooked lentils into the pasta.',
+    wed_s_tag:'Snack · 16:30', wed_s_title:'Yogurt + Fruit', wed_s_kcal:'~195 kcal',
+    wed_s_p_val:'White yogurt (plain)', wed_s_p_port:'1 cup', wed_s_c_val:'Mango slices', wed_s_c_port:'½ cup (100g)', wed_s_t_val:'1.5h before workout',
+    wed_s_note:'Mango is slightly higher sugar — perfect for pre-workout energy.',
+    wed_d_tag:'Dinner · 19:30', wed_d_title:'Tuna Stuffed Pita', wed_d_kcal:'~370 kcal',
+    wed_d_p_val:'Tuna in water + 1 egg hard boiled', wed_d_p_port:'½ tin tuna + 1 egg', wed_d_c_val:'Small whole wheat pita', wed_d_c_port:'1 small pita', wed_d_v_val:'Lettuce, tomato, cucumber, corn', wed_d_v_port:'Free amount',
+    wed_d_note:'Mix tuna with ¼ avocado as your fat serving (skip the oil).',
+    thu_b_tag:'Breakfast · 07:30', thu_b_title:'Yogurt Parfait', thu_b_kcal:'~375 kcal',
+    thu_b_p_val:'Yogurt 3% (plain)', thu_b_p_port:'1 cup', thu_b_c_val:'Granola (homemade preferred)', thu_b_c_port:'3 tbsp', thu_b_fv_val:'Strawberries + cucumber sticks', thu_b_fv_port:'½ cup berries + free veg',
+    thu_b_note:'Layer yogurt → granola → berries for texture.',
+    thu_l_tag:'Lunch · 13:00', thu_l_title:'Chicken Schnitzel & Sweet Potato', thu_l_kcal:'~520 kcal',
+    thu_l_p_val:'Baked chicken schnitzel', thu_l_p_port:'175g', thu_l_c_val:'Baked sweet potato + peas', thu_l_c_port:'1 medium potato', thu_l_v_val:'Israeli salad (tomato, cucumber, parsley)', thu_l_v_port:'Unlimited',
+    thu_l_note:'Bake schnitzel — not fry. Coat in oat flour + spices.',
+    thu_s_tag:'Snack · 16:30', thu_s_title:'Crackers & Spread', thu_s_kcal:'~185 kcal',
+    thu_s_c_val:'Whole grain rice cakes or crackers', thu_s_c_port:'2 large crackers', thu_s_pf_val:'White cheese 5% + cucumber', thu_s_pf_port:'2 tbsp cheese', thu_s_t_val:'1.5h before workout',
+    thu_s_note:'Simple and portable. Great to prep the night before.',
+    thu_d_tag:'Dinner · 19:30', thu_d_title:'Eggs & Legume Bowl', thu_d_kcal:'~390 kcal',
+    thu_d_p_val:'2 eggs (any style) + ½ cup cottage', thu_d_p_port:'2 eggs + 100g cottage', thu_d_c_val:'Hummus + pita', thu_d_c_port:'3 tbsp hummus + ½ pita', thu_d_v_val:'Roasted peppers, onion, tomato', thu_d_v_port:'Free amount',
+    thu_d_note:'Hummus counts as your legume AND fat serving here.',
+    fri_b_tag:'Breakfast · 08:00', fri_b_title:'Shabbat Brunch Plate', fri_b_kcal:'~400 kcal',
+    fri_b_p_val:'2 soft-boiled eggs + white cheese', fri_b_p_port:'2 eggs + 2 tbsp cheese', fri_b_c_val:'Whole wheat challah slice', fri_b_c_port:'1 slice (30g)', fri_b_v_val:'Full Israeli spread', fri_b_v_port:'Free amount',
+    fri_b_note:'Max 1 fat: choose between ¼ avocado, 1 tsp olive oil, or 5 olives. Pick one only.',
+    fri_l_tag:'Lunch · 13:30', fri_l_title:'Fish Fillet & Couscous', fri_l_kcal:'~510 kcal',
+    fri_l_p_val:'Baked sea bass or sea bream', fri_l_p_port:'175–200g', fri_l_c_val:'Whole wheat couscous + chickpeas', fri_l_c_port:'5 tbsp couscous', fri_l_v_val:'Grilled vegetables (zucchini, peppers, onion)', fri_l_v_port:'Unlimited',
+    fri_l_note:'Lemon + herbs on the fish — no heavy sauce needed.',
+    fri_s_tag:'Snack · 16:30', fri_s_title:'Light Fruit Snack', fri_s_kcal:'~140 kcal',
+    fri_s_c_val:'Watermelon / melon', fri_s_c_port:'200g', fri_s_f_val:'5 almonds', fri_s_f_port:'5 units', fri_s_h_val:'Water / sparkling water with mint', fri_s_h_port:'2+ glasses',
+    fri_s_note:'Light Friday afternoon snack. Focus on hydration.',
+    fri_d_tag:'Dinner · 20:00', fri_d_title:'Shabbat Dinner (Lighter Version)', fri_d_kcal:'~420 kcal',
+    fri_d_p_val:'Chicken breast / roast chicken (no skin)', fri_d_p_port:'175g', fri_d_c_val:'Rice or pita (1 carb serving)', fri_d_c_port:'4 tbsp rice or ½ pita', fri_d_v_val:'Roasted seasonal vegetables', fri_d_v_port:'Unlimited',
+    fri_d_note:'Enjoy Shabbat dinner. Remove skin from chicken. Fill half the plate with vegetables first.',
+    sat_b_tag:'Breakfast · 09:00', sat_b_title:'Lazy Shabbat Breakfast', sat_b_kcal:'~390 kcal',
+    sat_b_p_val:'Yogurt 3% + cottage 5%', sat_b_p_port:'½ cup each', sat_b_c_val:'Oats + seasonal fruit', sat_b_c_port:'3 tbsp oats + 1 fruit', sat_b_v_val:'Sliced veggies on the side', sat_b_v_port:'Free amount',
+    sat_b_note:'Saturday morning — slow and relaxed. Eat mindfully, no screens at the table.',
+    sat_l_tag:'Lunch · 14:00', sat_l_title:'BBQ / Family Lunch', sat_l_kcal:'~530 kcal',
+    sat_l_p_val:'Grilled meat / chicken skewers', sat_l_p_port:'175g', sat_l_c_val:'Pita or corn on the cob', sat_l_c_port:'1 small pita or 1 ear corn', sat_l_v_val:'Grilled / raw vegetables, salads', sat_l_v_port:'Unlimited',
+    sat_l_note:'Social eating day — enjoy it. Fill up on salads first, then the rest.',
+    sat_s_tag:'Snack · 17:00', sat_s_title:'Fruit + Natural Nuts', sat_s_kcal:'~175 kcal',
+    sat_s_c_val:'Nectarine or plum', sat_s_c_port:'2–3 small fruits', sat_s_f_val:'Natural walnuts or almonds', sat_s_f_port:'5 units', sat_s_h_val:'Cold water / herbal tea', sat_s_h_port:'2+ glasses',
+    sat_s_note:'Keep it light on Saturday afternoon — the lunch was likely bigger.',
+    sat_d_tag:'Dinner · 20:00', sat_d_title:'Light Egg Dinner', sat_d_kcal:'~340 kcal',
+    sat_d_p_val:'2 eggs + ½ cup cottage', sat_d_p_port:'2 eggs + 100g', sat_d_c_val:'1–2 whole grain crackers', sat_d_c_port:'2 crackers', sat_d_v_val:'Whatever is in the fridge', sat_d_v_port:'Free amount',
+    sat_d_note:'End of the week — keep dinner light and simple. Hydrate well.',
+    recipe_creami:'Ninja Creami — Healthy Ice Cream', recipe_passover:'Passover Recipes',
+    food_placeholder:'e.g. 1 hamburger, 200g fries and 1 coke zero 500ml',
+    footer_text:'Wellness · Recipes · Calculator · © 2026',
+  },
+  he: {
+    subtitle:'בריאות · מתכונים · מחשבון',
+    tab_wellness:'בריאות', tab_recipes:'מתכונים', tab_calculator:'מחשבון',
+    dietitian_title:'תפריט דיאטנית — גל · מרץ 2026',
+    dietitian_body:'תפריט אישי על בסיס הנחיות הדיאטנית הקלינית שלך. ספירת פחמימות פעילה. מקסימום מנת שומן אחת לארוחה. פעילות אירובית 2–3 פעמים בשבוע מומלצת.',
+    legend_protein:'חלבון', legend_carbs:'פחמימות', legend_fat:'שומן', legend_veg:'ירקות',
+    day_sun:'ראשון', day_mon:'שני', day_tue:'שלישי', day_wed:'רביעי', day_thu:'חמישי', day_fri:'שישי', day_sat:'שבת',
+    total_calories:'סה״כ קלוריות', total_protein:'חלבון', total_carbs:'פחמימות', total_fat:'שומן',
+    kcal_day:'קק״ל / יום', grams:'גרם',
+    label_protein:'חלבון', label_carbs:'פחמימות', label_fat:'שומן', label_vegetables:'ירקות', label_timing:'תזמון',
+    sun_b_tag:'ארוחת בוקר · 07:30', sun_b_title:'קערת יוגורט יווני', sun_b_kcal:'~380 קק״ל',
+    sun_b_p_val:'יוגורט יווני 3%', sun_b_p_port:'כוס אחת (200 מ״ל)', sun_b_c_val:'שיבולת שועל + פרוסות בננה', sun_b_c_port:'3 כפות שיבולת + חצי בננה', sun_b_v_val:'עגבניות שרי', sun_b_v_port:'כמות חופשית',
+    sun_b_note:'ניתן להוסיף מעט דבש. מקסימום מנת שומן אחת — דלג על חמאה/שמן אם אוכל יוגורט.',
+    sun_l_tag:'ארוחת צהריים · 13:00', sun_l_title:'עוף צלוי עם אורז', sun_l_kcal:'~520 קק״ל',
+    sun_l_p_val:'חזה עוף על הגריל', sun_l_p_port:'175 גרם', sun_l_c_val:'אורז לבן + עדשים ירוקות', sun_l_c_port:'5 כפות מבושל', sun_l_v_val:'סלט מלפפון, עגבנייה ופטרוזיליה', sun_l_v_port:'ללא הגבלה',
+    sun_l_note:'ערבב עדשים לתוך האורז. שמן זית (כפית אחת בלבד).',
+    sun_s_tag:'ביניים · 16:30', sun_s_title:'דלק לפני אימון', sun_s_kcal:'~200 קק״ל',
+    sun_s_p_val:'יוגורט לבן', sun_s_p_port:'כוס אחת', sun_s_c_val:'תפוח (בינוני)', sun_s_c_port:'שלם אחד', sun_s_t_val:'לאכול שעה וחצי לפני אימון',
+    sun_s_note:'אם מתחשק מתוק: שמור על היוגורט, הוסף 4 קוביות שוקולד מריר במקום התפוח.',
+    sun_d_tag:'ארוחת ערב · 19:30', sun_d_title:'צלחת ביצה וטונה', sun_d_kcal:'~380 קק״ל',
+    sun_d_p_val:'2 ביצים מקושקשות + חצי פחית טונה', sun_d_p_port:'2 ביצים + 60 גרם טונה', sun_d_c_val:'פיתה מחיטה מלאה', sun_d_c_port:'קטנה (חצי פיתה)', sun_d_v_val:'מלפפון, צנונית, בצל ירוק', sun_d_v_port:'כמות חופשית',
+    sun_d_note:'הוסף חצי גביע קוטג׳ 5% אם עדיין רעב. שמן זית לביצים בלבד.',
+    mon_b_tag:'ארוחת בוקר · 07:30', mon_b_title:'חביתה עם לחם מלא', mon_b_kcal:'~360 קק״ל',
+    mon_b_p_val:'חביתת 2 ביצים', mon_b_p_port:'2 ביצים גדולות', mon_b_c_val:'לחם חיטה מלאה', mon_b_c_port:'פרוסה אחת (30 גרם)', mon_b_v_val:'עגבנייה, מלפפון, עשבי תיבול', mon_b_v_port:'כמות חופשית',
+    mon_b_note:'חצי כפית שמן זית בלבד. ניתן להוסיף גבינה לבנה לחביתה לחלבון נוסף.',
+    mon_l_tag:'ארוחת צהריים · 13:00', mon_l_title:'קציצות הודו עם בורגול', mon_l_kcal:'~510 קק״ל',
+    mon_l_p_val:'קציצות הודו (ביתיות)', mon_l_p_port:'175 גרם', mon_l_c_val:'בורגול + חומוס מעורב', mon_l_c_port:'5 כפות מבושל', mon_l_v_val:'קישואים וחציל צלויים', mon_l_v_port:'ללא הגבלה',
+    mon_l_note:'ערבוב חומוס לבורגול מוסיף סיבים וחלבון. תבל עם כמון ולימון.',
+    mon_s_tag:'ביניים · 16:30', mon_s_title:'לחם עם ממרח', mon_s_kcal:'~190 קק״ל',
+    mon_s_c_val:'לחם חיטה מלאה', mon_s_c_port:'פרוסה אחת', mon_s_pf_val:'קוטג׳ 5% או חמאת בוטנים + דבש', mon_s_pf_port:'2 כפות קוטג׳ או כפית חמאת בוטנים', mon_s_t_val:'שעה וחצי לפני אימון',
+    mon_s_note:'חמאת בוטנים = מנת שומן. אל תוסיף שומן נוסף בנשנוש.',
+    mon_d_tag:'ארוחת ערב · 19:30', mon_d_title:'קוטג׳ עם ירקות', mon_d_kcal:'~350 קק״ל',
+    mon_d_p_val:'קוטג׳ 5% + ביצה קשה', mon_d_p_port:'חצי גביע + ביצה', mon_d_c_val:'2 קרקרים גדולים מדגן מלא', mon_d_c_port:'2 קרקרים', mon_d_v_val:'סלט מעורב גדול', mon_d_v_port:'כמות חופשית',
+    mon_d_note:'ארוחה קלה. הוסף 5 אגוזים טבעיים כמנת שומן אם עדיין רעב אחרי הסלט.',
+    tue_b_tag:'ארוחת בוקר · 07:30', tue_b_title:'קערת קוטג׳ עם גרנולה', tue_b_kcal:'~370 קק״ל',
+    tue_b_p_val:'קוטג׳ 5%', tue_b_p_port:'חצי גביע (100 גרם)', tue_b_c_val:'גרנולה ביתית', tue_b_c_port:'3 כפות', tue_b_vf_val:'מלפפון + פירות יער עונתיים', tue_b_vf_port:'ירק חופשי + חצי כוס פירות יער',
+    tue_b_note:'עדיף גרנולה ביתית — קנויה לרוב עם סוכר ושומן נסתרים.',
+    tue_l_tag:'ארוחת צהריים · 13:00', tue_l_title:'סלמון עם קינואה', tue_l_kcal:'~540 קק״ל',
+    tue_l_p_val:'פילה סלמון בתנור', tue_l_p_port:'175 גרם', tue_l_c_val:'קינואה + אדממה', tue_l_c_port:'5 כפות קינואה מבושלת', tue_l_v_val:'ברוקולי מאודה + עגבניות שרי', tue_l_v_port:'ללא הגבלה',
+    tue_l_note:'לסלמון יש שומן בריא — דלג על שמן זית נוסף.',
+    tue_s_tag:'ביניים · 16:30', tue_s_title:'פרי ואגוזים', tue_s_kcal:'~180 קק״ל',
+    tue_s_cf_val:'אגס או אפרסק', tue_s_cf_port:'בינוני אחד', tue_s_f_val:'שקדים טבעיים', tue_s_f_port:'5 יחידות', tue_s_t_val:'שעה וחצי לפני אימון',
+    tue_s_note:'פשוט ונקי. שילוב מעולה לפני אימון.',
+    tue_d_tag:'ארוחת ערב · 19:30', tue_d_title:'שקשוקה קלה', tue_d_kcal:'~360 קק״ל',
+    tue_d_p_val:'2 ביצים ברוטב עגבניות', tue_d_p_port:'2 ביצים גדולות', tue_d_c_val:'פיתה מחיטה מלאה', tue_d_c_port:'חצי פיתה (קטנה)', tue_d_v_val:'בסיס עגבניות + פלפלים + תרד', tue_d_v_port:'ללא הגבלה ברוטב',
+    tue_d_note:'הכן את הרוטב עם מינימום שמן (חצי כפית). הוסף חצי גביע קוטג׳ בצד.',
+    wed_b_tag:'ארוחת בוקר · 07:30', wed_b_title:'קערת שיבולת שועל עם גבינה לבנה', wed_b_kcal:'~360 קק״ל',
+    wed_b_p_val:'גבינה לבנה', wed_b_p_port:'חצי גביע', wed_b_c_val:'שיבולת שועל מבושלת', wed_b_c_port:'3 כפות יבש = 6 כפות מבושל', wed_b_v_val:'צנונית, נענע, מלפפון', wed_b_v_port:'כמות חופשית',
+    wed_b_note:'קערת שיבולת שועל מלוחה — יוצאת דופן אך משביעה מאוד. הוסף זעתר ושמן זית (כפית).',
+    wed_l_tag:'ארוחת צהריים · 13:00', wed_l_title:'קציצות בקר עם פסטה', wed_l_kcal:'~530 קק״ל',
+    wed_l_p_val:'קציצות בקר רזה (בתנור)', wed_l_p_port:'175 גרם', wed_l_c_val:'פסטה מחיטה מלאה + עדשים אדומות', wed_l_c_port:'5 כפות פסטה מבושלת', wed_l_v_val:'רוטב עגבניות + סלט ירוק', wed_l_v_port:'ללא הגבלה',
+    wed_l_note:'קציצות בתנור — לא לטגן. ערבב עדשים מבושלות לתוך הפסטה.',
+    wed_s_tag:'ביניים · 16:30', wed_s_title:'יוגורט + פרי', wed_s_kcal:'~195 קק״ל',
+    wed_s_p_val:'יוגורט לבן (פשוט)', wed_s_p_port:'כוס אחת', wed_s_c_val:'פרוסות מנגו', wed_s_c_port:'חצי כוס (100 גרם)', wed_s_t_val:'שעה וחצי לפני אימון',
+    wed_s_note:'מנגו עם סוכר מעט גבוה — מעולה לאנרגיה לפני אימון.',
+    wed_d_tag:'ארוחת ערב · 19:30', wed_d_title:'פיתה ממולאת טונה', wed_d_kcal:'~370 קק״ל',
+    wed_d_p_val:'טונה במים + ביצה קשה', wed_d_p_port:'חצי פחית טונה + ביצה', wed_d_c_val:'פיתה קטנה מחיטה מלאה', wed_d_c_port:'פיתה קטנה אחת', wed_d_v_val:'חסה, עגבנייה, מלפפון, תירס', wed_d_v_port:'כמות חופשית',
+    wed_d_note:'ערבב טונה עם רבע אבוקדו כמנת שומן. תבל עם לימון, מלח ופלפל שחור.',
+    thu_b_tag:'ארוחת בוקר · 07:30', thu_b_title:'פרפה יוגורט', thu_b_kcal:'~375 קק״ל',
+    thu_b_p_val:'יוגורט 3% (פשוט)', thu_b_p_port:'כוס אחת', thu_b_c_val:'גרנולה (עדיף ביתית)', thu_b_c_port:'3 כפות', thu_b_fv_val:'תות + מקלות מלפפון', thu_b_fv_port:'חצי כוס פירות יער + ירק חופשי',
+    thu_b_note:'שכב: יוגורט → גרנולה → פירות יער לטקסטורה מעולה.',
+    thu_l_tag:'ארוחת צהריים · 13:00', thu_l_title:'שניצל עוף עם בטטה', thu_l_kcal:'~520 קק״ל',
+    thu_l_p_val:'שניצל עוף בתנור', thu_l_p_port:'175 גרם', thu_l_c_val:'בטטה בתנור + אפונה', thu_l_c_port:'בטטה בינונית', thu_l_v_val:'סלט ישראלי (עגבנייה, מלפפון, פטרוזיליה)', thu_l_v_port:'ללא הגבלה',
+    thu_l_note:'שניצל בתנור — לא לטגן. ציפוי בקמח שיבולת שועל + תבלינים.',
+    thu_s_tag:'ביניים · 16:30', thu_s_title:'קרקרים עם ממרח', thu_s_kcal:'~185 קק״ל',
+    thu_s_c_val:'קרקרים מאורז/דגן מלא', thu_s_c_port:'2 קרקרים גדולים', thu_s_pf_val:'גבינה לבנה 5% + מלפפון', thu_s_pf_port:'2 כפות גבינה', thu_s_t_val:'שעה וחצי לפני אימון',
+    thu_s_note:'פשוט ונייד. מצוין להכין ערב לפני.',
+    thu_d_tag:'ארוחת ערב · 19:30', thu_d_title:'ביצים עם קטניות', thu_d_kcal:'~390 קק״ל',
+    thu_d_p_val:'2 ביצים + חצי גביע קוטג׳', thu_d_p_port:'2 ביצים + 100 גרם קוטג׳', thu_d_c_val:'חומוס + פיתה', thu_d_c_port:'3 כפות חומוס + חצי פיתה', thu_d_v_val:'פלפלים, בצל, עגבנייה צלויים', thu_d_v_port:'כמות חופשית',
+    thu_d_note:'החומוס = קטנייה וגם מנת שומן. אל תוסיף שמן/טחינה מעל.',
+    fri_b_tag:'ארוחת בוקר · 08:00', fri_b_title:'צלחת בראנץ׳ שבתי', fri_b_kcal:'~400 קק״ל',
+    fri_b_p_val:'2 ביצים רכות + גבינה לבנה', fri_b_p_port:'2 ביצים + 2 כפות גבינה', fri_b_c_val:'פרוסת חלה מחיטה מלאה', fri_b_c_port:'פרוסה (30 גרם)', fri_b_v_val:'מגוון ישראלי', fri_b_v_port:'כמות חופשית',
+    fri_b_note:'מקסימום שומן אחד: רבע אבוקדו, כפית שמן זית, או 5 זיתים. בחר אחד בלבד.',
+    fri_l_tag:'ארוחת צהריים · 13:30', fri_l_title:'פילה דג עם קוסקוס', fri_l_kcal:'~510 קק״ל',
+    fri_l_p_val:'לברק או דנית בתנור', fri_l_p_port:'175–200 גרם', fri_l_c_val:'קוסקוס מחיטה מלאה + חומוס', fri_l_c_port:'5 כפות קוסקוס', fri_l_v_val:'ירקות על האש (קישוא, פלפל, בצל)', fri_l_v_port:'ללא הגבלה',
+    fri_l_note:'לימון + עשבי תיבול על הדג — לא צריך רוטב כבד.',
+    fri_s_tag:'ביניים · 16:30', fri_s_title:'נשנוש פרי קל', fri_s_kcal:'~140 קק״ל',
+    fri_s_c_val:'אבטיח / מלון', fri_s_c_port:'200 גרם', fri_s_f_val:'5 שקדים', fri_s_f_port:'5 יחידות', fri_s_h_val:'מים / מים קלים עם נענע', fri_s_h_port:'2+ כוסות',
+    fri_s_note:'נשנוש קל אחר הצהריים. יום מנוחה — תמקד בהידרציה.',
+    fri_d_tag:'ארוחת ערב · 20:00', fri_d_title:'ארוחת שבת (גרסה קלה)', fri_d_kcal:'~420 קק״ל',
+    fri_d_p_val:'חזה עוף / עוף בתנור (ללא עור)', fri_d_p_port:'175 גרם', fri_d_c_val:'אורז או פיתה (מנת פחמימה אחת)', fri_d_c_port:'4 כפות אורז או חצי פיתה', fri_d_v_val:'ירקות עונתיים צלויים', fri_d_v_port:'ללא הגבלה',
+    fri_d_note:'תהנה מארוחת שבת. הסר עור מהעוף. מלא חצי הצלחת בירקות קודם.',
+    sat_b_tag:'ארוחת בוקר · 09:00', sat_b_title:'בוקר שבת עצלן', sat_b_kcal:'~390 קק״ל',
+    sat_b_p_val:'יוגורט 3% + קוטג׳ 5%', sat_b_p_port:'חצי גביע מכל אחד', sat_b_c_val:'שיבולת שועל + פרי עונתי', sat_b_c_port:'3 כפות שיבולת + פרי', sat_b_v_val:'ירקות פרוסים בצד', sat_b_v_port:'כמות חופשית',
+    sat_b_note:'בוקר שבת — איטי ורגוע. אוכלים בכיף, בלי מסכים על השולחן.',
+    sat_l_tag:'ארוחת צהריים · 14:00', sat_l_title:'ברביקיו / ארוחת משפחה', sat_l_kcal:'~530 קק״ל',
+    sat_l_p_val:'בשר צלוי / שיפודי עוף', sat_l_p_port:'175 גרם', sat_l_c_val:'פיתה או תירס', sat_l_c_port:'פיתה קטנה או קלח תירס', sat_l_v_val:'ירקות על האש / חיים, סלטים', sat_l_v_port:'ללא הגבלה',
+    sat_l_note:'יום אכילה חברתי — תהנה. מלא את הצלחת בסלטים קודם.',
+    sat_s_tag:'ביניים · 17:00', sat_s_title:'פרי + אגוזים טבעיים', sat_s_kcal:'~175 קק״ל',
+    sat_s_c_val:'נקטרינה או שזיף', sat_s_c_port:'2–3 פירות קטנים', sat_s_f_val:'אגוזים טבעיים או שקדים', sat_s_f_port:'5 יחידות', sat_s_h_val:'מים קרים / תה צמחים', sat_s_h_port:'2+ כוסות',
+    sat_s_note:'שמור על קלות אחר הצהריים — ארוחת הצהריים הייתה כנראה גדולה יותר.',
+    sat_d_tag:'ארוחת ערב · 20:00', sat_d_title:'ארוחת ערב קלה עם ביצים', sat_d_kcal:'~340 קק״ל',
+    sat_d_p_val:'2 ביצים + חצי גביע קוטג׳', sat_d_p_port:'2 ביצים + 100 גרם', sat_d_c_val:'1–2 קרקרים מדגן מלא', sat_d_c_port:'2 קרקרים', sat_d_v_val:'מה שיש במקרר', sat_d_v_port:'כמות חופשית',
+    sat_d_note:'סוף השבוע — ארוחת ערב קלה ופשוטה. שתה הרבה מים.',
+    recipe_creami:'Ninja Creami — גלידה בריאה', recipe_passover:'מתכוני פסח',
+    food_placeholder:'למשל: המבורגר אחד, 200 גרם צ׳יפס וקולה זירו 500 מ״ל',
+    footer_text:'בריאות · מתכונים · מחשבון · © 2026',
+  }
+};
 
-function switchDay(name, btn) {
-  document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('day-'+name).classList.add('active');
-  btn.classList.add('active');
-}
-
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeRecipe(); });
-
-// ── LANGUAGE / i18n ──
-let currentLang = localStorage.getItem('cg_lang') || 'en';
+// ── APPLY LANGUAGE ──
+let currentLang = 'en';
 
 function applyLang(lang) {
   currentLang = lang;
-  localStorage.setItem('cg_lang', lang);
+  try { localStorage.setItem('cg_lang', lang); } catch(e) {}
 
-  const t = TRANSLATIONS[lang];
+  const T = I18N[lang];
   const isHe = lang === 'he';
 
-  // Update html dir + lang
   document.documentElement.lang = lang;
-  document.documentElement.dir = isHe ? 'rtl' : 'ltr';
-
-  // Update body font for Hebrew
+  document.documentElement.dir  = isHe ? 'rtl' : 'ltr';
   document.body.style.fontFamily = isHe
-    ? "'Heebo', 'IBM Plex Sans', sans-serif"
-    : "'IBM Plex Sans', sans-serif";
+    ? "'Heebo','IBM Plex Sans',sans-serif"
+    : "'IBM Plex Sans',sans-serif";
 
-  // Translate all data-i18n elements
+  // Translate all [data-i18n] elements
   document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (t[key] !== undefined) el.textContent = t[key];
+    const k = el.getAttribute('data-i18n');
+    if (T[k] !== undefined) el.textContent = T[k];
   });
 
-  // Update lang button
+  // Lang button text
   const btn = document.getElementById('lang-btn');
   if (btn) btn.textContent = isHe ? 'EN' : 'עב';
 
-  // Update placeholder on food textarea
+  // Food log textarea placeholder
   const ta = document.getElementById('food-text-input');
-  if (ta && t.food_placeholder) ta.placeholder = t.food_placeholder;
+  if (ta) ta.placeholder = T.food_placeholder;
 
-  // Update recipe section labels (they use class, not data-i18n)
-  const labels = document.querySelectorAll('.recipe-section-label');
-  if (labels[0] && t.recipe_section_creami) labels[0].textContent = t.recipe_section_creami;
-  if (labels[1] && t.recipe_section_passover) labels[1].textContent = t.recipe_section_passover;
+  // Recipe section labels (no data-i18n, use class)
+  const rLabels = document.querySelectorAll('.recipe-section-label');
+  if (rLabels[0]) rLabels[0].textContent = T.recipe_creami;
+  if (rLabels[1]) rLabels[1].textContent = T.recipe_passover;
+
+  // Footer
+  const footer = document.querySelector('footer span[data-i18n="footer_text"]');
+  if (footer) footer.textContent = T.footer_text;
 }
 
 function toggleLang() {
   applyLang(currentLang === 'en' ? 'he' : 'en');
 }
 
-// Apply on load
-applyLang(currentLang);
-
+// Init on load
+(function init() {
+  let saved = 'en';
+  try { saved = localStorage.getItem('cg_lang') || 'en'; } catch(e) {}
+  applyLang(saved);
+})();
