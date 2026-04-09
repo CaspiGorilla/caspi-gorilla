@@ -449,30 +449,54 @@ function touchStart(e) {
   for (const t of e.changedTouches) {
     addFinger(t.identifier, t.clientX, t.clientY, e.currentTarget);
   }
+  // Restart countdown whenever a new finger lands
   resetCountdown();
 }
 
 function touchEnd(e) {
   e.preventDefault();
   if (splitDone) return;
-  // Don't remove fingers on touchend — they stay until split
-  // Restart countdown only if fingers remain
+  for (const t of e.changedTouches) {
+    removeFinger(t.identifier);
+  }
+  // If fingers still on screen restart countdown, otherwise cancel it
   if (Object.keys(activeTouches).length > 0) {
     resetCountdown();
   } else {
     clearCountdown();
+    // Show instruction again if all fingers lifted
+    document.getElementById('touch-instruction').style.display = 'flex';
   }
 }
 
-// Desktop mouse support (one finger at a time for testing)
+// Desktop mouse support
 function mouseDown(e) {
   if (splitDone) return;
   const id = 'mouse';
   if (activeTouches[id]) return;
   addFinger(id, e.clientX, e.clientY, e.currentTarget);
   resetCountdown();
-  const up = () => { document.removeEventListener('mouseup', up); };
+  const up = () => {
+    removeFinger('mouse');
+    if (Object.keys(activeTouches).length > 0) {
+      resetCountdown();
+    } else {
+      clearCountdown();
+      document.getElementById('touch-instruction').style.display = 'flex';
+    }
+    document.removeEventListener('mouseup', up);
+  };
   document.addEventListener('mouseup', up);
+}
+
+function removeFinger(id) {
+  const touch = activeTouches[id];
+  if (!touch) return;
+  // Fade out and remove the circle
+  touch.g.style.transition = 'opacity 0.2s ease';
+  touch.g.style.opacity = '0';
+  setTimeout(() => { if (touch.g.parentNode) touch.g.parentNode.removeChild(touch.g); }, 200);
+  delete activeTouches[id];
 }
 
 function getRelativePos(clientX, clientY, el) {
