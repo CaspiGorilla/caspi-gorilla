@@ -323,3 +323,82 @@ function calculate() {
   document.getElementById('calc-results').classList.add('visible');
   document.getElementById('calc-results').scrollIntoView({ behavior:'smooth', block:'start' });
 }
+
+// ── CHAWZI ──
+let selectedGroups = 2;
+const GROUP_COLORS = ['#4caf7d','#378add','#c89650','#e24b4a','#9b59b6'];
+const GROUP_LABELS = ['Group 1','Group 2','Group 3','Group 4','Group 5'];
+
+function selectGroups(n, btn) {
+  selectedGroups = n;
+  document.querySelectorAll('.group-num-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function addNameField() {
+  const container = document.getElementById('names-inputs');
+  const rows = container.querySelectorAll('.name-row');
+  if (rows.length >= 10) return;
+  const idx = rows.length + 1;
+  const div = document.createElement('div');
+  div.className = 'name-row';
+  div.style.cssText = 'display:flex; gap:8px; align-items:center;';
+  div.innerHTML = `<input class="calc-input name-input" type="text" placeholder="Name ${idx}" maxlength="30" style="flex:1;" onkeydown="handleNameKey(event,this)">`;
+  container.appendChild(div);
+  div.querySelector('input').focus();
+}
+
+function handleNameKey(e, input) {
+  if (e.key === 'Enter') {
+    const container = document.getElementById('names-inputs');
+    const rows = container.querySelectorAll('.name-row');
+    const inputs = container.querySelectorAll('.name-input');
+    const idx = Array.from(inputs).indexOf(input);
+    if (idx === inputs.length - 1 && rows.length < 10) {
+      addNameField();
+    } else if (idx < inputs.length - 1) {
+      inputs[idx + 1].focus();
+    }
+  }
+}
+
+function splitGroups() {
+  const inputs = document.querySelectorAll('.name-input');
+  const names = Array.from(inputs).map(i => i.value.trim()).filter(n => n.length > 0);
+
+  if (names.length < 2) {
+    alert('Please enter at least 2 names.');
+    return;
+  }
+
+  if (selectedGroups > names.length) {
+    alert(`You have ${names.length} names but requested ${selectedGroups} groups. Please add more names or choose fewer groups.`);
+    return;
+  }
+
+  // Shuffle names randomly
+  const shuffled = [...names].sort(() => Math.random() - 0.5);
+
+  // Split into groups
+  const groups = Array.from({ length: selectedGroups }, () => []);
+  shuffled.forEach((name, i) => groups[i % selectedGroups].push(name));
+
+  // Render results
+  const results = document.getElementById('chawzi-results');
+  results.style.display = 'block';
+  results.innerHTML = `
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-title" style="margin-bottom:16px;">
+        Result <span class="badge">${names.length} PLAYERS · ${selectedGroups} GROUPS</span>
+      </div>
+      <div class="chawzi-grid">
+        ${groups.map((group, gi) => `
+          <div class="group-card" style="animation-delay:${gi * 0.08}s; border-top: 3px solid ${GROUP_COLORS[gi]};">
+            <div class="group-card-title" style="color:${GROUP_COLORS[gi]};">${GROUP_LABELS[gi]}</div>
+            ${group.map(name => `<div class="group-name" style="border-left-color:${GROUP_COLORS[gi]};">${name}</div>`).join('')}
+          </div>`).join('')}
+      </div>
+      <button onclick="splitGroups()" style="margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:9px 18px; background:none; color:var(--text-muted); border:1px solid var(--card-border); border-radius:3px; cursor:pointer; transition:all 0.15s; width:100%;" onmouseover="this.style.borderColor='var(--green-border)'; this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--card-border)'; this.style.color='var(--text-muted)'">↻ Shuffle Again</button>
+    </div>`;
+  results.scrollIntoView({ behavior:'smooth', block:'start' });
+}

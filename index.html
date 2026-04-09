@@ -19,6 +19,7 @@
   <button class="tab-btn active" onclick="switchTab('wellness',this)">Wellness</button>
   <button class="tab-btn" onclick="switchTab('recipes',this)">Recipes</button>
   <button class="tab-btn" onclick="switchTab('calculator',this)">Calculator</button>
+  <button class="tab-btn" onclick="switchTab('chawzi',this)">Chawzi</button>
 </div>
 
 <div class="content-area">
@@ -541,9 +542,45 @@
   </div>
 </div>
 
+<!-- ══════════ CHAWZI ══════════ -->
+<div class="tab-panel" id="tab-chawzi">
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">Group Splitter <span class="badge">CHAWZI</span></div>
+
+    <div class="calc-section-title" style="margin-bottom:10px;">Enter Names</div>
+    <div id="names-inputs" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
+      <div class="name-row" style="display:flex; gap:8px; align-items:center;">
+        <input class="calc-input name-input" type="text" placeholder="Name 1" maxlength="30" style="flex:1;" onkeydown="handleNameKey(event,this)">
+      </div>
+      <div class="name-row" style="display:flex; gap:8px; align-items:center;">
+        <input class="calc-input name-input" type="text" placeholder="Name 2" maxlength="30" style="flex:1;" onkeydown="handleNameKey(event,this)">
+      </div>
+      <div class="name-row" style="display:flex; gap:8px; align-items:center;">
+        <input class="calc-input name-input" type="text" placeholder="Name 3" maxlength="30" style="flex:1;" onkeydown="handleNameKey(event,this)">
+      </div>
+    </div>
+
+    <button onclick="addNameField()" style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:9px 18px; background:none; color:var(--text-muted); border:1px solid var(--card-border); border-radius:3px; cursor:pointer; margin-bottom:20px; transition:all 0.15s;" onmouseover="this.style.borderColor='var(--green-border)'; this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--card-border)'; this.style.color='var(--text-muted)'">+ Add Name</button>
+
+    <div class="calc-section-title" style="margin-bottom:10px;">Number of Groups</div>
+    <div style="display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap;">
+      <button class="group-num-btn active" onclick="selectGroups(2,this)">2</button>
+      <button class="group-num-btn" onclick="selectGroups(3,this)">3</button>
+      <button class="group-num-btn" onclick="selectGroups(4,this)">4</button>
+      <button class="group-num-btn" onclick="selectGroups(5,this)">5</button>
+    </div>
+
+    <button class="calc-btn" onclick="splitGroups()">Split ↓</button>
+  </div>
+
+  <div id="chawzi-results" style="display:none;"></div>
+
+</div>
+
 </div><!-- /content-area -->
 
-<footer><span>CASPI GORILLA</span> — <span>Wellness · Recipes · Calculator · © 2026</span></footer>
+<footer><span>CASPI GORILLA</span> — <span>Wellness · Recipes · Calculator · Chawzi · © 2026</span></footer>
 
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
   <div class="modal" id="modal-box">

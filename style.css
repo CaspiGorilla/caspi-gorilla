@@ -481,3 +481,15 @@
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
+
+  /* ── CHAWZI ── */
+  .group-num-btn { font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:600; width:48px; height:48px; border:1px solid var(--card-border); background:var(--page-bg); color:var(--text-muted); border-radius:4px; cursor:pointer; transition:all 0.15s; }
+  .group-num-btn:hover { border-color:var(--green-border); color:var(--green); background:var(--green-muted); }
+  .group-num-btn.active { border-color:var(--green); color:var(--green); background:var(--green-muted); font-weight:700; }
+  .group-card { background:var(--navy); border:1px solid var(--navy-light); border-radius:4px; padding:20px 24px; flex:1; min-width:160px; }
+  .group-card-title { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--green); margin-bottom:14px; }
+  .group-name { font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:500; color:var(--white); padding:10px 14px; background:rgba(255,255,255,0.05); border-radius:3px; margin-bottom:6px; border-left:3px solid var(--green); }
+  .group-name:last-child { margin-bottom:0; }
+  .chawzi-grid { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+  @keyframes popIn { from { opacity:0; transform:scale(0.92) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
+  .group-card { animation: popIn 0.3s ease both; }
