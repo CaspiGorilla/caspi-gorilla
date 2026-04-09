@@ -545,36 +545,75 @@
 <!-- ══════════ CHAWZI ══════════ -->
 <div class="tab-panel" id="tab-chawzi">
 
-  <div class="card" style="margin-bottom:16px;">
-    <div class="card-title">Group Splitter <span class="badge">CHAWZI</span></div>
-
-    <div class="calc-section-title" style="margin-bottom:10px;">Enter Names</div>
-    <div id="names-inputs" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
-      <div class="name-row" style="display:flex; gap:8px; align-items:center;">
-        <input class="calc-input name-input" type="text" placeholder="Name 1" maxlength="30" style="flex:1;" onkeydown="handleNameKey(event,this)">
-      </div>
-      <div class="name-row" style="display:flex; gap:8px; align-items:center;">
-        <input class="calc-input name-input" type="text" placeholder="Name 2" maxlength="30" style="flex:1;" onkeydown="handleNameKey(event,this)">
-      </div>
-      <div class="name-row" style="display:flex; gap:8px; align-items:center;">
-        <input class="calc-input name-input" type="text" placeholder="Name 3" maxlength="30" style="flex:1;" onkeydown="handleNameKey(event,this)">
-      </div>
-    </div>
-
-    <button onclick="addNameField()" style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:9px 18px; background:none; color:var(--text-muted); border:1px solid var(--card-border); border-radius:3px; cursor:pointer; margin-bottom:20px; transition:all 0.15s;" onmouseover="this.style.borderColor='var(--green-border)'; this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--card-border)'; this.style.color='var(--text-muted)'">+ Add Name</button>
-
-    <div class="calc-section-title" style="margin-bottom:10px;">Number of Groups</div>
-    <div style="display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap;">
-      <button class="group-num-btn active" onclick="selectGroups(2,this)">2</button>
-      <button class="group-num-btn" onclick="selectGroups(3,this)">3</button>
-      <button class="group-num-btn" onclick="selectGroups(4,this)">4</button>
-      <button class="group-num-btn" onclick="selectGroups(5,this)">5</button>
-    </div>
-
-    <button class="calc-btn" onclick="splitGroups()">Split ↓</button>
+  <!-- MODE TOGGLE -->
+  <div style="display:flex; gap:0; margin-bottom:16px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:4px; overflow:hidden;">
+    <button id="mode-names-btn" onclick="setChawziMode('names')" style="flex:1; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:13px; border:none; cursor:pointer; background:var(--navy); color:var(--green); transition:all 0.15s;">✎ Name Splitter</button>
+    <button id="mode-touch-btn" onclick="setChawziMode('touch')" style="flex:1; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:13px; border:none; cursor:pointer; background:none; color:var(--text-muted); border-left:1px solid var(--card-border); transition:all 0.15s;">✋ Touch Splitter</button>
   </div>
 
-  <div id="chawzi-results" style="display:none;"></div>
+  <!-- NAME SPLITTER -->
+  <div id="chawzi-names-mode">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">Name Splitter <span class="badge">CHAWZI</span></div>
+      <div class="calc-section-title" style="margin-bottom:10px;">Enter Names</div>
+      <div id="names-inputs" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
+        <div class="name-row" style="display:flex; gap:8px; align-items:center;"><input class="calc-input name-input" type="text" placeholder="Name 1" maxlength="30" style="flex:1;" onkeydown="handleNameKey(event,this)"></div>
+        <div class="name-row" style="display:flex; gap:8px; align-items:center;"><input class="calc-input name-input" type="text" placeholder="Name 2" maxlength="30" style="flex:1;" onkeydown="handleNameKey(event,this)"></div>
+        <div class="name-row" style="display:flex; gap:8px; align-items:center;"><input class="calc-input name-input" type="text" placeholder="Name 3" maxlength="30" style="flex:1;" onkeydown="handleNameKey(event,this)"></div>
+      </div>
+      <button onclick="addNameField()" style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:9px 18px; background:none; color:var(--text-muted); border:1px solid var(--card-border); border-radius:3px; cursor:pointer; margin-bottom:20px; transition:all 0.15s;" onmouseover="this.style.borderColor='var(--green-border)'; this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--card-border)'; this.style.color='var(--text-muted)'">+ Add Name</button>
+      <div class="calc-section-title" style="margin-bottom:10px;">Number of Groups</div>
+      <div style="display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap;">
+        <button class="group-num-btn active" onclick="selectGroups(2,this)">2</button>
+        <button class="group-num-btn" onclick="selectGroups(3,this)">3</button>
+        <button class="group-num-btn" onclick="selectGroups(4,this)">4</button>
+        <button class="group-num-btn" onclick="selectGroups(5,this)">5</button>
+      </div>
+      <button class="calc-btn" onclick="splitGroups()">Split ↓</button>
+    </div>
+    <div id="chawzi-results" style="display:none;"></div>
+  </div>
+
+  <!-- TOUCH SPLITTER -->
+  <div id="chawzi-touch-mode" style="display:none;">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">Touch Splitter <span class="badge">MULTI-TOUCH</span></div>
+      <div class="calc-section-title" style="margin-bottom:10px;">Number of Groups</div>
+      <div style="display:flex; gap:8px; margin-bottom:0; flex-wrap:wrap;">
+        <button class="group-num-btn active" id="touch-g2" onclick="selectTouchGroups(2,this)">2</button>
+        <button class="group-num-btn" id="touch-g3" onclick="selectTouchGroups(3,this)">3</button>
+        <button class="group-num-btn" id="touch-g4" onclick="selectTouchGroups(4,this)">4</button>
+        <button class="group-num-btn" id="touch-g5" onclick="selectTouchGroups(5,this)">5</button>
+      </div>
+    </div>
+
+    <!-- TOUCHPAD AREA -->
+    <div id="touchpad-wrap" style="position:relative;">
+      <div id="touchpad"
+        style="background:var(--navy); border:2px solid var(--navy-light); border-radius:8px; width:100%; height:380px; position:relative; overflow:hidden; touch-action:none; user-select:none; -webkit-user-select:none; cursor:pointer;"
+        ontouchstart="touchStart(event)" ontouchend="touchEnd(event)" ontouchcancel="touchEnd(event)"
+        onmousedown="mouseDown(event)">
+
+        <!-- Instruction overlay -->
+        <div id="touch-instruction" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; pointer-events:none;">
+          <div style="font-size:48px; opacity:0.3;">✋</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; color:rgba(255,255,255,0.4); letter-spacing:0.08em; text-align:center; padding:0 24px;">Everyone place a finger on the screen</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(255,255,255,0.2); letter-spacing:0.1em; text-transform:uppercase;">Splitting in 3 seconds after last touch</div>
+        </div>
+
+        <!-- Countdown overlay -->
+        <div id="touch-countdown" style="position:absolute; inset:0; display:none; align-items:center; justify-content:center; pointer-events:none;">
+          <div id="countdown-num" style="font-family:'JetBrains Mono',monospace; font-size:96px; font-weight:700; color:white; opacity:0.9; text-shadow:0 0 40px rgba(76,175,125,0.6);"></div>
+        </div>
+
+        <!-- SVG for circles -->
+        <svg id="touch-svg" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;"></svg>
+      </div>
+
+      <!-- Reset button (shown after reveal) -->
+      <button id="touch-reset-btn" onclick="resetTouchpad()" style="display:none; width:100%; margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:13px; background:var(--navy); color:var(--green); border:1px solid var(--green-border); border-radius:3px; cursor:pointer;">↻ Play Again</button>
+    </div>
+  </div>
 
 </div>
 

@@ -402,3 +402,198 @@ function splitGroups() {
     </div>`;
   results.scrollIntoView({ behavior:'smooth', block:'start' });
 }
+
+// ── CHAWZI MODE TOGGLE ──
+function setChawziMode(mode) {
+  const isTouch = mode === 'touch';
+  document.getElementById('chawzi-names-mode').style.display = isTouch ? 'none' : 'block';
+  document.getElementById('chawzi-touch-mode').style.display = isTouch ? 'block' : 'none';
+  document.getElementById('mode-names-btn').style.background = isTouch ? 'none' : 'var(--navy)';
+  document.getElementById('mode-names-btn').style.color = isTouch ? 'var(--text-muted)' : 'var(--green)';
+  document.getElementById('mode-touch-btn').style.background = isTouch ? 'var(--navy)' : 'none';
+  document.getElementById('mode-touch-btn').style.color = isTouch ? 'var(--green)' : 'var(--text-muted)';
+}
+
+// ── TOUCH SPLITTER ──
+const TOUCH_COLORS = ['#4caf7d','#378add','#e24b4a','#f0a500','#9b59b6'];
+const TOUCH_NAMES  = ['Group 1','Group 2','Group 3','Group 4','Group 5'];
+
+let touchGroups   = 2;
+let activeTouches = {}; // id -> { x, y, el, assigned }
+let countdownTimer = null;
+let countdownValue = 3;
+let countdownInterval = null;
+let splitDone = false;
+
+function selectTouchGroups(n, btn) {
+  touchGroups = n;
+  document.querySelectorAll('#chawzi-touch-mode .group-num-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  resetTouchpad();
+}
+
+function resetTouchpad() {
+  clearCountdown();
+  activeTouches = {};
+  splitDone = false;
+  document.getElementById('touch-svg').innerHTML = '';
+  document.getElementById('touch-instruction').style.display = 'flex';
+  document.getElementById('touch-countdown').style.display = 'none';
+  document.getElementById('touch-reset-btn').style.display = 'none';
+}
+
+// ── TOUCH EVENTS ──
+function touchStart(e) {
+  e.preventDefault();
+  if (splitDone) return;
+  for (const t of e.changedTouches) {
+    addFinger(t.identifier, t.clientX, t.clientY, e.currentTarget);
+  }
+  resetCountdown();
+}
+
+function touchEnd(e) {
+  e.preventDefault();
+  if (splitDone) return;
+  // Don't remove fingers on touchend — they stay until split
+  // Restart countdown only if fingers remain
+  if (Object.keys(activeTouches).length > 0) {
+    resetCountdown();
+  } else {
+    clearCountdown();
+  }
+}
+
+// Desktop mouse support (one finger at a time for testing)
+function mouseDown(e) {
+  if (splitDone) return;
+  const id = 'mouse';
+  if (activeTouches[id]) return;
+  addFinger(id, e.clientX, e.clientY, e.currentTarget);
+  resetCountdown();
+  const up = () => { document.removeEventListener('mouseup', up); };
+  document.addEventListener('mouseup', up);
+}
+
+function getRelativePos(clientX, clientY, el) {
+  const rect = el.getBoundingClientRect();
+  return { x: clientX - rect.left, y: clientY - rect.top };
+}
+
+function addFinger(id, clientX, clientY, padEl) {
+  const svg = document.getElementById('touch-svg');
+  const { x, y } = getRelativePos(clientX, clientY, padEl);
+
+  // Hide instruction after first touch
+  document.getElementById('touch-instruction').style.display = 'none';
+
+  // Create circle
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  circle.setAttribute('cx', x);
+  circle.setAttribute('cy', y);
+  circle.setAttribute('r', '36');
+  circle.setAttribute('fill', 'rgba(255,255,255,0.15)');
+  circle.setAttribute('stroke', 'rgba(255,255,255,0.6)');
+  circle.setAttribute('stroke-width', '2');
+  circle.style.transition = 'all 0.4s ease';
+
+  // Pulse ring
+  const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  pulse.setAttribute('cx', x);
+  pulse.setAttribute('cy', y);
+  pulse.setAttribute('r', '36');
+  pulse.setAttribute('fill', 'none');
+  pulse.setAttribute('stroke', 'rgba(255,255,255,0.3)');
+  pulse.setAttribute('stroke-width', '2');
+  pulse.style.animation = 'touchPulse 1.2s ease-out infinite';
+
+  g.appendChild(pulse);
+  g.appendChild(circle);
+  svg.appendChild(g);
+
+  activeTouches[id] = { x, y, g, circle, pulse };
+}
+
+function resetCountdown() {
+  clearCountdown();
+  if (Object.keys(activeTouches).length === 0) return;
+  countdownValue = 3;
+  countdownTimer = setTimeout(() => startCountdown(), 3000);
+}
+
+function clearCountdown() {
+  if (countdownTimer) { clearTimeout(countdownTimer); countdownTimer = null; }
+  if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+  document.getElementById('touch-countdown').style.display = 'none';
+}
+
+function startCountdown() {
+  const fingers = Object.keys(activeTouches).length;
+  if (fingers === 0) return;
+
+  countdownValue = 3;
+  const cdEl = document.getElementById('touch-countdown');
+  const numEl = document.getElementById('countdown-num');
+  cdEl.style.display = 'flex';
+  numEl.textContent = countdownValue;
+
+  countdownInterval = setInterval(() => {
+    countdownValue--;
+    if (countdownValue <= 0) {
+      clearInterval(countdownInterval);
+      cdEl.style.display = 'none';
+      revealGroups();
+    } else {
+      numEl.textContent = countdownValue;
+    }
+  }, 1000);
+}
+
+function revealGroups() {
+  splitDone = true;
+  const ids = Object.keys(activeTouches);
+  const shuffled = [...ids].sort(() => Math.random() - 0.5);
+
+  // Assign groups
+  const groupAssignments = {};
+  shuffled.forEach((id, i) => {
+    groupAssignments[id] = i % touchGroups;
+  });
+
+  // Animate circles to group colors
+  ids.forEach(id => {
+    const touch = activeTouches[id];
+    const groupIdx = groupAssignments[id];
+    const color = TOUCH_COLORS[groupIdx];
+    const label = TOUCH_NAMES[groupIdx];
+
+    // Color the circle
+    touch.circle.style.transition = 'all 0.5s ease';
+    touch.circle.setAttribute('fill', color);
+    touch.circle.setAttribute('stroke', color);
+    touch.circle.setAttribute('r', '48');
+    touch.pulse.style.display = 'none';
+
+    // Add group label text
+    const svg = document.getElementById('touch-svg');
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', touch.x);
+    text.setAttribute('y', touch.y + 6);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('fill', 'white');
+    text.setAttribute('font-size', '13');
+    text.setAttribute('font-weight', '700');
+    text.setAttribute('font-family', 'JetBrains Mono, monospace');
+    text.style.pointerEvents = 'none';
+    text.style.animation = 'fadeInText 0.4s ease 0.3s both';
+    text.textContent = label;
+    svg.appendChild(text);
+  });
+
+  // Show reset button
+  setTimeout(() => {
+    document.getElementById('touch-reset-btn').style.display = 'block';
+  }, 600);
+}
