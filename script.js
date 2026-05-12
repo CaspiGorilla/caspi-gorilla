@@ -621,3 +621,207 @@ function revealGroups() {
     document.getElementById('touch-reset-btn').style.display = 'block';
   }, 600);
 }
+
+// ══════════════════════════════════════
+// WEEKLY TRACKER
+// ══════════════════════════════════════
+const DAY_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS    = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+let weekOffset  = 0;   // 0 = current week, -1 = last week, etc.
+let weekData    = {};  // { 'YYYY-MM-DD': { food:'', kcal: null } }
+
+function getWeekDates(offset) {
+  const today = new Date();
+  const dow   = today.getDay(); // 0=Sun
+  const sunday = new Date(today);
+  sunday.setDate(today.getDate() - dow + offset * 7);
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(sunday);
+    d.setDate(sunday.getDate() + i);
+    days.push(d);
+  }
+  return days;
+}
+
+function dateKey(d) {
+  return d.toISOString().slice(0, 10);
+}
+
+function isToday(d) {
+  return dateKey(d) === dateKey(new Date());
+}
+
+function shiftWeek(dir) {
+  // Save current textarea values before re-rendering
+  saveTrackerInputs();
+  if (dir === 0) weekOffset = 0;
+  else weekOffset += dir;
+  renderTracker();
+}
+
+function saveTrackerInputs() {
+  document.querySelectorAll('.tracker-textarea').forEach(ta => {
+    const key = ta.getAttribute('data-date');
+    if (!weekData[key]) weekData[key] = { food: '', kcal: null };
+    weekData[key].food = ta.value;
+  });
+}
+
+function renderTracker() {
+  const days = getWeekDates(weekOffset);
+
+  // Week label
+  const first = days[0], last = days[6];
+  document.getElementById('week-label').textContent =
+    `WEEK OF ${first.getDate()} ${MONTHS[first.getMonth()]} — ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}`;
+
+  // Header row
+  const headerRow = document.getElementById('tracker-header-row');
+  headerRow.innerHTML = days.map(d => {
+    const today = isToday(d);
+    return `<th class="${today ? 'today-col' : ''}" style="width:${100/7}%;">
+      ${DAY_SHORT[d.getDay()]}<br>
+      <span style="font-size:10px; font-weight:400; opacity:0.6; letter-spacing:0.04em;">${d.getDate()} ${MONTHS[d.getMonth()]}</span>
+      ${today ? '<br><span style="font-size:9px; background:var(--green); color:var(--navy); padding:1px 6px; border-radius:2px; margin-top:3px; display:inline-block;">TODAY</span>' : ''}
+    </th>`;
+  }).join('');
+
+  // Food input row
+  const foodRow = document.getElementById('tracker-food-row');
+  foodRow.innerHTML = days.map(d => {
+    const key  = dateKey(d);
+    const val  = weekData[key]?.food || '';
+    const today = isToday(d);
+    return `<td class="${today ? 'today-col' : ''}">
+      <textarea
+        class="tracker-textarea"
+        data-date="${key}"
+        placeholder="What did you eat?"
+        oninput="onTrackerInput('${key}',this)"
+      >${val}</textarea>
+    </td>`;
+  }).join('');
+
+  // Calorie row
+  const calRow = document.getElementById('tracker-cal-row');
+  calRow.innerHTML = days.map(d => {
+    const key   = dateKey(d);
+    const kcal  = weekData[key]?.kcal;
+    const today = isToday(d);
+    return `<td class="tracker-cal-cell ${today ? 'today-col' : ''} ${kcal ? 'has-value' : ''}" id="cal-${key}">
+      <span class="cal-label">Calories</span>
+      ${kcal ? kcal + ' kcal' : '—'}
+    </td>`;
+  }).join('');
+
+  updateWeeklyTotals();
+}
+
+function onTrackerInput(key, el) {
+  if (!weekData[key]) weekData[key] = { food: '', kcal: null };
+  weekData[key].food = el.value;
+  // Clear calorie for this day when user edits
+  weekData[key].kcal = null;
+  const cell = document.getElementById('cal-' + key);
+  if (cell) {
+    cell.className = cell.className.replace('has-value','').trim();
+    cell.querySelector('.cal-label') ? null : null;
+    cell.innerHTML = '<span class="cal-label">Calories</span>—';
+  }
+  updateWeeklyTotals();
+}
+
+async function calculateWeek() {
+  saveTrackerInputs();
+  const days = getWeekDates(weekOffset);
+  const toCalc = days.filter(d => {
+    const key = dateKey(d);
+    return weekData[key]?.food?.trim().length > 0 && !weekData[key]?.kcal;
+  });
+
+  if (toCalc.length === 0) {
+    document.getElementById('tracker-status').textContent = 'No new food entries to calculate.';
+    return;
+  }
+
+  const btn = document.getElementById('track-calc-btn');
+  btn.disabled = true;
+  btn.textContent = 'Calculating...';
+  document.getElementById('tracker-status').textContent = `Calculating ${toCalc.length} day${toCalc.length > 1 ? 's' : ''}...`;
+
+  // Show spinners on cells being calculated
+  toCalc.forEach(d => {
+    const key  = dateKey(d);
+    const cell = document.getElementById('cal-' + key);
+    if (cell) cell.innerHTML = '<span class="cal-label">Calories</span><span class="cal-spinner">↻</span>';
+  });
+
+  // Calculate all days in parallel
+  await Promise.all(toCalc.map(d => calcDayKcal(d)));
+
+  updateWeeklyTotals();
+  btn.disabled = false;
+  btn.textContent = 'Calculate Week ↓';
+  document.getElementById('tracker-status').textContent = '✓ Done!';
+  setTimeout(() => { document.getElementById('tracker-status').textContent = ''; }, 3000);
+}
+
+async function calcDayKcal(d) {
+  const key  = dateKey(d);
+  const food = weekData[key]?.food?.trim();
+  if (!food) return;
+
+  try {
+    const response = await fetch('/.netlify/functions/analyze-food', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: food })
+    });
+    const data = await response.json();
+    if (!response.ok || !data.items) throw new Error('bad response');
+
+    const totalKcal = data.items.reduce((sum, item) => sum + (item.kcal || 0), 0);
+    if (!weekData[key]) weekData[key] = { food, kcal: null };
+    weekData[key].kcal = totalKcal;
+
+    // Update cell
+    const cell = document.getElementById('cal-' + key);
+    if (cell) {
+      cell.className = cell.className + ' has-value';
+      cell.innerHTML = `<span class="cal-label">Calories</span>${totalKcal} kcal`;
+    }
+  } catch (e) {
+    const cell = document.getElementById('cal-' + key);
+    if (cell) cell.innerHTML = '<span class="cal-label">Calories</span><span style="color:#e24b4a;">Error</span>';
+  }
+}
+
+function updateWeeklyTotals() {
+  const days  = getWeekDates(weekOffset);
+  const kcals = days.map(d => weekData[dateKey(d)]?.kcal).filter(v => v != null && v > 0);
+  if (kcals.length === 0) {
+    document.getElementById('weekly-total-kcal').textContent = '—';
+    document.getElementById('weekly-avg-kcal').textContent   = '—';
+    return;
+  }
+  const total = kcals.reduce((a, b) => a + b, 0);
+  const avg   = Math.round(total / kcals.length);
+  document.getElementById('weekly-total-kcal').textContent = total.toLocaleString();
+  document.getElementById('weekly-avg-kcal').textContent   = avg.toLocaleString();
+}
+
+// Init tracker when tab is opened
+const _origSwitchTab = switchTab;
+function switchTab(name, btn) {
+  _origSwitchTab(name, btn);
+  if (name === 'tracking') {
+    renderTracker();
+  }
+}
+
+// Auto-render on first load if tracking tab is active
+document.addEventListener('DOMContentLoaded', () => {
+  renderTracker();
+});

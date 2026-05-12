@@ -19,6 +19,7 @@
   <button class="tab-btn active" onclick="switchTab('wellness',this)">Wellness</button>
   <button class="tab-btn" onclick="switchTab('recipes',this)">Recipes</button>
   <button class="tab-btn" onclick="switchTab('calculator',this)">Calculator</button>
+  <button class="tab-btn" onclick="switchTab('tracking',this)">Weekly</button>
   <button class="tab-btn" onclick="switchTab('chawzi',this)">Chawzi</button>
 </div>
 
@@ -614,6 +615,67 @@
       <button id="touch-reset-btn" onclick="resetTouchpad()" style="display:none; width:100%; margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:13px; background:var(--navy); color:var(--green); border:1px solid var(--green-border); border-radius:3px; cursor:pointer;">↻ Play Again</button>
     </div>
   </div>
+
+</div>
+
+<!-- ══════════ WEEKLY TRACKING ══════════ -->
+<div class="tab-panel" id="tab-tracking">
+
+  <div class="card" style="margin-bottom:16px; padding:20px 22px;">
+    <div class="card-title">Weekly Food Tracker <span class="badge">AI CALORIES</span></div>
+    <p style="font-size:12.5px; color:var(--text-muted); line-height:1.7; margin-bottom:0;">Write what you ate each day, then click <strong>Calculate Week</strong> to get calorie estimates per day and a weekly total.</p>
+  </div>
+
+  <!-- WEEK SELECTOR -->
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; color:var(--text-muted); letter-spacing:0.1em;" id="week-label">WEEK OF —</div>
+    <div style="display:flex; gap:8px;">
+      <button onclick="shiftWeek(-1)" style="font-family:'JetBrains Mono',monospace; font-size:12px; padding:7px 14px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:3px; cursor:pointer; color:var(--text-muted);">← Prev</button>
+      <button onclick="shiftWeek(0)" style="font-family:'JetBrains Mono',monospace; font-size:12px; padding:7px 14px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:3px; cursor:pointer; color:var(--green); border-color:var(--green-border);">This Week</button>
+      <button onclick="shiftWeek(1)" style="font-family:'JetBrains Mono',monospace; font-size:12px; padding:7px 14px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:3px; cursor:pointer; color:var(--text-muted);">Next →</button>
+    </div>
+  </div>
+
+  <!-- WEEKLY TABLE -->
+  <div style="overflow-x:auto; margin-bottom:14px;">
+    <table class="tracker-table" id="tracker-table">
+      <thead>
+        <tr id="tracker-header-row">
+          <!-- Days filled by JS -->
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Food input row -->
+        <tr id="tracker-food-row">
+          <!-- Textareas filled by JS -->
+        </tr>
+        <!-- Calories result row -->
+        <tr id="tracker-cal-row">
+          <!-- Calorie cells filled by JS -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- WEEKLY TOTAL + CALCULATE -->
+  <div style="display:flex; align-items:stretch; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+    <div class="card-dark" style="flex:1; min-width:180px; margin-bottom:0; padding:18px 22px; display:flex; flex-direction:column; gap:4px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase;">Weekly Total</div>
+      <div id="weekly-total-kcal" style="font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:700; color:#6ecf9a; line-height:1;">—</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(255,255,255,0.25);">kcal this week</div>
+    </div>
+    <div class="card-dark" style="flex:1; min-width:180px; margin-bottom:0; padding:18px 22px; display:flex; flex-direction:column; gap:4px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase;">Daily Average</div>
+      <div id="weekly-avg-kcal" style="font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:700; color:#378add; line-height:1;">—</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(255,255,255,0.25);">kcal / day</div>
+    </div>
+    <div style="flex:2; min-width:200px; display:flex; align-items:stretch;">
+      <button class="calc-btn" id="track-calc-btn" onclick="calculateWeek()" style="height:100%; font-size:13px; letter-spacing:0.1em;">Calculate Week ↓</button>
+    </div>
+  </div>
+
+  <!-- STATUS -->
+  <div id="tracker-status" style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); min-height:18px; margin-bottom:4px;"></div>
 
 </div>
 
