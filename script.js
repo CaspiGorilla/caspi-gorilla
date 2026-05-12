@@ -709,11 +709,15 @@ function renderTracker() {
   const calRow = document.getElementById('tracker-cal-row');
   calRow.innerHTML = days.map(d => {
     const key   = dateKey(d);
-    const kcal  = weekData[key]?.kcal;
+    const data  = weekData[key];
     const today = isToday(d);
-    return `<td class="tracker-cal-cell ${today ? 'today-col' : ''} ${kcal ? 'has-value' : ''}" id="cal-${key}">
-      <span class="cal-label">Calories</span>
-      ${kcal ? kcal + ' kcal' : '—'}
+    const hasVal = data?.kcal != null;
+    return `<td class="tracker-cal-cell ${today ? 'today-col' : ''} ${hasVal ? 'has-value' : ''}" id="cal-${key}">
+      ${hasVal ? `
+        <span class="cal-label">Calories</span><span style="color:#6ecf9a;">${data.kcal} kcal</span><br>
+        <span class="cal-label" style="margin-top:5px; display:block;">Protein</span><span style="color:#4caf7d;">${data.protein}g</span><br>
+        <span class="cal-label" style="margin-top:5px; display:block;">Fat</span><span style="color:#c89650;">${data.fat}g</span>
+      ` : '<span class="cal-label">Macros</span>—'}
     </td>`;
   }).join('');
 
@@ -721,15 +725,15 @@ function renderTracker() {
 }
 
 function onTrackerInput(key, el) {
-  if (!weekData[key]) weekData[key] = { food: '', kcal: null };
+  if (!weekData[key]) weekData[key] = { food: '', kcal: null, protein: null, fat: null };
   weekData[key].food = el.value;
-  // Clear calorie for this day when user edits
   weekData[key].kcal = null;
+  weekData[key].protein = null;
+  weekData[key].fat = null;
   const cell = document.getElementById('cal-' + key);
   if (cell) {
     cell.className = cell.className.replace('has-value','').trim();
-    cell.querySelector('.cal-label') ? null : null;
-    cell.innerHTML = '<span class="cal-label">Calories</span>—';
+    cell.innerHTML = '<span class="cal-label">Macros</span>—';
   }
   updateWeeklyTotals();
 }
@@ -756,7 +760,7 @@ async function calculateWeek() {
   toCalc.forEach(d => {
     const key  = dateKey(d);
     const cell = document.getElementById('cal-' + key);
-    if (cell) cell.innerHTML = '<span class="cal-label">Calories</span><span class="cal-spinner">↻</span>';
+    if (cell) cell.innerHTML = '<span class="cal-label">Macros</span><span class="cal-spinner">↻</span>';
   });
 
   // Calculate all days in parallel
@@ -783,34 +787,50 @@ async function calcDayKcal(d) {
     const data = await response.json();
     if (!response.ok || !data.items) throw new Error('bad response');
 
-    const totalKcal = data.items.reduce((sum, item) => sum + (item.kcal || 0), 0);
-    if (!weekData[key]) weekData[key] = { food, kcal: null };
-    weekData[key].kcal = totalKcal;
+    const totalKcal    = Math.round(data.items.reduce((s, i) => s + (i.kcal    || 0), 0));
+    const totalProtein = Math.round(data.items.reduce((s, i) => s + (i.protein || 0), 0));
+    const totalFat     = Math.round(data.items.reduce((s, i) => s + (i.fat     || 0), 0));
 
-    // Update cell
+    if (!weekData[key]) weekData[key] = { food };
+    weekData[key].kcal    = totalKcal;
+    weekData[key].protein = totalProtein;
+    weekData[key].fat     = totalFat;
+
     const cell = document.getElementById('cal-' + key);
     if (cell) {
-      cell.className = cell.className + ' has-value';
-      cell.innerHTML = `<span class="cal-label">Calories</span>${totalKcal} kcal`;
+      cell.classList.add('has-value');
+      cell.innerHTML = `
+        <span class="cal-label">Calories</span><span style="color:#6ecf9a;">${totalKcal} kcal</span><br>
+        <span class="cal-label" style="margin-top:5px; display:block;">Protein</span><span style="color:#4caf7d;">${totalProtein}g</span><br>
+        <span class="cal-label" style="margin-top:5px; display:block;">Fat</span><span style="color:#c89650;">${totalFat}g</span>`;
     }
   } catch (e) {
     const cell = document.getElementById('cal-' + key);
-    if (cell) cell.innerHTML = '<span class="cal-label">Calories</span><span style="color:#e24b4a;">Error</span>';
+    if (cell) cell.innerHTML = '<span class="cal-label">Macros</span><span style="color:#e24b4a;">Error</span>';
   }
 }
 
 function updateWeeklyTotals() {
-  const days  = getWeekDates(weekOffset);
-  const kcals = days.map(d => weekData[dateKey(d)]?.kcal).filter(v => v != null && v > 0);
-  if (kcals.length === 0) {
-    document.getElementById('weekly-total-kcal').textContent = '—';
-    document.getElementById('weekly-avg-kcal').textContent   = '—';
+  const days = getWeekDates(weekOffset);
+  const entries = days.map(d => weekData[dateKey(d)]).filter(v => v?.kcal != null && v.kcal > 0);
+
+  if (entries.length === 0) {
+    ['weekly-total-kcal','weekly-avg-kcal','weekly-total-protein','weekly-avg-protein','weekly-total-fat','weekly-avg-fat']
+      .forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '—'; });
     return;
   }
-  const total = kcals.reduce((a, b) => a + b, 0);
-  const avg   = Math.round(total / kcals.length);
-  document.getElementById('weekly-total-kcal').textContent = total.toLocaleString();
-  document.getElementById('weekly-avg-kcal').textContent   = avg.toLocaleString();
+
+  const totalKcal    = entries.reduce((s, e) => s + (e.kcal    || 0), 0);
+  const totalProtein = entries.reduce((s, e) => s + (e.protein || 0), 0);
+  const totalFat     = entries.reduce((s, e) => s + (e.fat     || 0), 0);
+  const n = entries.length;
+
+  document.getElementById('weekly-total-kcal').textContent    = totalKcal.toLocaleString();
+  document.getElementById('weekly-avg-kcal').textContent      = Math.round(totalKcal / n).toLocaleString();
+  document.getElementById('weekly-total-protein').textContent = totalProtein + 'g';
+  document.getElementById('weekly-avg-protein').textContent   = Math.round(totalProtein / n) + 'g';
+  document.getElementById('weekly-total-fat').textContent     = totalFat + 'g';
+  document.getElementById('weekly-avg-fat').textContent       = Math.round(totalFat / n) + 'g';
 }
 
 // Render tracker when Weekly tab becomes visible

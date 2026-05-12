@@ -657,22 +657,42 @@
     </table>
   </div>
 
-  <!-- WEEKLY TOTAL + CALCULATE -->
-  <div style="display:flex; align-items:stretch; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
-    <div class="card-dark" style="flex:1; min-width:180px; margin-bottom:0; padding:18px 22px; display:flex; flex-direction:column; gap:4px;">
-      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase;">Weekly Total</div>
-      <div id="weekly-total-kcal" style="font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:700; color:#6ecf9a; line-height:1;">—</div>
-      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(255,255,255,0.25);">kcal this week</div>
+  <!-- WEEKLY SUMMARY CARDS -->
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:12px;">
+    <!-- KCAL -->
+    <div class="card-dark" style="margin-bottom:0; padding:16px 20px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:8px;">Weekly Calories</div>
+      <div id="weekly-total-kcal" style="font-family:'JetBrains Mono',monospace; font-size:26px; font-weight:700; color:#6ecf9a; line-height:1; margin-bottom:4px;">—</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(255,255,255,0.25);">kcal total</div>
+      <div style="border-top:1px solid rgba(255,255,255,0.07); margin:10px 0;"></div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:6px;">Daily Avg</div>
+      <div id="weekly-avg-kcal" style="font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:600; color:#378add; line-height:1; margin-bottom:2px;">—</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(255,255,255,0.25);">kcal / day</div>
     </div>
-    <div class="card-dark" style="flex:1; min-width:180px; margin-bottom:0; padding:18px 22px; display:flex; flex-direction:column; gap:4px;">
-      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase;">Daily Average</div>
-      <div id="weekly-avg-kcal" style="font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:700; color:#378add; line-height:1;">—</div>
-      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(255,255,255,0.25);">kcal / day</div>
+    <!-- PROTEIN -->
+    <div class="card-dark" style="margin-bottom:0; padding:16px 20px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:8px;">Weekly Protein</div>
+      <div id="weekly-total-protein" style="font-family:'JetBrains Mono',monospace; font-size:26px; font-weight:700; color:#4caf7d; line-height:1; margin-bottom:4px;">—</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(255,255,255,0.25);">grams total</div>
+      <div style="border-top:1px solid rgba(255,255,255,0.07); margin:10px 0;"></div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:6px;">Daily Avg</div>
+      <div id="weekly-avg-protein" style="font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:600; color:#4caf7d; line-height:1; margin-bottom:2px; opacity:0.7;">—</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(255,255,255,0.25);">g / day</div>
     </div>
-    <div style="flex:2; min-width:200px; display:flex; align-items:stretch;">
-      <button class="calc-btn" id="track-calc-btn" onclick="calculateWeek()" style="height:100%; font-size:13px; letter-spacing:0.1em;">Calculate Week ↓</button>
+    <!-- FAT -->
+    <div class="card-dark" style="margin-bottom:0; padding:16px 20px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:8px;">Weekly Fat</div>
+      <div id="weekly-total-fat" style="font-family:'JetBrains Mono',monospace; font-size:26px; font-weight:700; color:#c89650; line-height:1; margin-bottom:4px;">—</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(255,255,255,0.25);">grams total</div>
+      <div style="border-top:1px solid rgba(255,255,255,0.07); margin:10px 0;"></div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:6px;">Daily Avg</div>
+      <div id="weekly-avg-fat" style="font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:600; color:#c89650; line-height:1; margin-bottom:2px; opacity:0.7;">—</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(255,255,255,0.25);">g / day</div>
     </div>
   </div>
+
+  <!-- CALCULATE BUTTON -->
+  <button class="calc-btn" id="track-calc-btn" onclick="calculateWeek()" style="width:100%; margin-bottom:12px; font-size:13px; letter-spacing:0.1em;">Calculate Week ↓</button>
 
   <!-- STATUS -->
   <div id="tracker-status" style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); min-height:18px; margin-bottom:4px;"></div>

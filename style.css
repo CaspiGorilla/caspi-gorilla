@@ -557,3 +557,8 @@
     .tracker-table { min-width:500px; }
     .tracker-textarea { min-height:80px; font-size:12px; }
   }
+
+  @media (max-width: 600px) {
+    #tab-tracking .card-dark { min-width: 0; }
+    #tab-tracking [style*="grid-template-columns:repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
+  }
