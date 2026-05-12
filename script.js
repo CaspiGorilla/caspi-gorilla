@@ -30,6 +30,7 @@ function switchTab(name, btn) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
+  if (name === 'tracking') renderTracker();
 }
 
 function switchDay(name, btn) {
@@ -812,16 +813,5 @@ function updateWeeklyTotals() {
   document.getElementById('weekly-avg-kcal').textContent   = avg.toLocaleString();
 }
 
-// Init tracker when tab is opened
-const _origSwitchTab = switchTab;
-function switchTab(name, btn) {
-  _origSwitchTab(name, btn);
-  if (name === 'tracking') {
-    renderTracker();
-  }
-}
-
-// Auto-render on first load if tracking tab is active
-document.addEventListener('DOMContentLoaded', () => {
-  renderTracker();
-});
+// Render tracker when Weekly tab becomes visible
+document.addEventListener('DOMContentLoaded', () => { renderTracker(); });
